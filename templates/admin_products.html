@@ -1,0 +1,41 @@
+{% extends "admin.html"%}
+
+{% block content %}
+<table id="myTable" class="table table-striped table-dark">
+      <thead>
+            <tr>
+                  <!-- <th scope="col">Vendor</th> -->
+                  <th scope="col">Title</th>
+                  <th scope="col">Image</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Quantity</th>
+                  <th scope="col">Edit</th>
+                  <th scope="col">Delete</th>
+            </tr>
+      </thead>
+
+      {% for product in products %}
+      <tr>
+            <th scope="row"></th>
+            <!-- <td><select>
+                  {% for product in products %}
+                  <option>{{product.title}}</option>
+                  {% endfor %}
+            </select></td> -->
+            
+            <td>{{product.title}}</td>
+
+            <td ><img style="height: 100px; width: 100px;" src="{{product.ImageURL}}"> </td>
+            <td>{{product.description}}</td>
+            <td>{{product.price}}</td>
+            <td>{{product.quantity}}</td>
+            <td><a href="/edit_product/{{ product.id}}"><button class="btn btn-success btn-lg btn-block"
+                              style="width: auto;">Edit</button></a></td>
+            <td><a href="/delete_product/{{product.id}}"><button onclick="return confirm(' Are you sure to delete' ) "
+                              class="btn btn-danger btn-lg btn-block" style="width: auto;">Delete</button></a></td>
+      </tr>
+
+      {% endfor %}
+</table>
+{% endblock%}

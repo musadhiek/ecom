@@ -2,6 +2,8 @@ from django.shortcuts import render,redirect
 from django.contrib import auth
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from product import views
+from django.contrib import messages
 
 # Create your views here.
 def logout_request(request):
@@ -65,7 +67,7 @@ def userpage(request):
 
 def vendorpage(request):
     if request.user.is_authenticated:
-        return render(request,'vendorpage.html')
+        return redirect(views.show_products)
     else:
         return redirect(home)
 def vendor_signup(request):
@@ -96,11 +98,13 @@ def add_vendor(request):
         if password == confirm_password:
             if User.objects.filter(email=email).exists():
                 return render(request, 'add_vendor.html',{'warning':'a user with this email already exists'})
+            elif User.objects.filter(username=username).exists():
+                return render(request, 'add_vendor.html',{'warning':'this username is taken'})
             else:
                 user =User.objects.create_user(username=username,email=email,password=password,is_staff=True,is_superuser=False)
                 user.save()
                 users = User.objects.filter(is_superuser=False)
-            return redirect(adminpage)
+                return redirect(adminpage)
         else:
              return render(request, 'add_vendor.html',{'warning':'passwords do not match'})      
     return render(request,'add_vendor.html')
@@ -142,7 +146,24 @@ def add_user(request):
             else:
                 user =User.objects.create_user(username=username,email=email,password=password,is_staff=False,is_superuser=False)
                 user.save()
-                return redirect(adminpage)
+                return redirect(adminusers)
         else:
              return render(request, 'add_user.html',{'warning':'passwords do not match'})      
     return render(request,'add_user.html')
+
+def edit_user(request,id):
+    if request.method=='POST':
+        username = request.POST['username']
+        email = request.POST['email']
+        user = User.objects.get(id=id)
+        if User.objects.filter(email=email).exists():
+            messages.error(request,'Email already taken')
+            return render(request,'edit_user.html',{'user':user})
+        else:
+            user = User.objects.get(id=id)
+            user.username=username
+            user.email=email
+            user.save()
+            return redirect(adminpage)
+    user = User.objects.get(id=id)
+    return render(request,'edit_user.html',{'user':user})        

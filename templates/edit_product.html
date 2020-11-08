@@ -1,0 +1,29 @@
+{% extends "add.html" %}
+
+{% block content %}
+<form method="POST" action="{% url 'edit_product' product.id %}" enctype="multipart/form-data">
+	{% csrf_token %}
+<fieldset>
+	<p class="text-uppercase pull-center"> Edit Product</p>
+	<div class="form-group">
+		<input type="text" name="title" id="title" class="form-control input-lg" value="{{product.title}}">
+	</div>
+
+	<div class="form-group">
+		<input type="text" name="description" id="description" class="form-control input-lg"value="{{product.description}}">
+	</div>
+	<div class="form-group">
+		<input type="number" name="price" id="price" class="form-control input-lg" value="{{product.price}}">
+	</div>
+	<div class="form-group">
+		<input type="number" name="quantity" id="quantity" class="form-control input-lg" value="{{product.quantity}}">
+	</div>
+	<div class="form-group">
+		<input type="file" name="image" id="image" class="form-control input-lg" >
+	</div>
+	<div>
+		<input type="submit" class="btn btn-lg btn-primary   value=" Update">
+	</div>
+</fieldset>
+</form>
+{% endblock %}
