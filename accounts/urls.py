@@ -10,8 +10,8 @@ urlpatterns = [
     
     path('logout_request',views.logout_request,name='logout'),
     
-    path('admin_page',views.adminpage,name='admin_page'),
-    path('adminusers',views.adminusers,name='adminusers'),
+    path('admin_page',views.admin_vendor_page,name='admin_page'),
+    path('adminusers',views.admin_user_page,name='adminusers'),
     
     path('user_page', views.userpage,name='user_page'),
     path('vendor_page',views.vendorpage,name='vendor_page'),

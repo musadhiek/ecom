@@ -13,7 +13,7 @@ def logout_request(request):
 
 def admin_login(request):
     if request.user.is_authenticated and request.user.is_superuser:
-        return redirect(adminpage)
+        return redirect(admin_vendor_page)
     if  request.method == 'POST':
             username = request.POST['username']
             password = request.POST['password']
@@ -21,7 +21,7 @@ def admin_login(request):
             user = auth.authenticate(username=username,password=password)
             if user is not None and user.is_superuser:
                 auth.login(request,user)
-                return redirect(adminpage)
+                return redirect(admin_vendor_page)
             else:
                 messages.error(request,'Incorrect username or password')        
                 return render(request,'admin_login.html',)
@@ -67,17 +67,17 @@ def user_login(request):
 def home(request):
     return render(request,'home.html')
 
-def adminpage(request):
+def admin_vendor_page(request):
     if request.user.is_authenticated:
         users = User.objects.filter(is_superuser=False,is_staff=True)
-        return render(request,'adminpage.html',{'users':users})
+        return render(request,'admin_vendor_page.html',{'users':users})
     else:
         return redirect(home)
 
-def adminusers(request):
+def admin_user_page(request):
     if request.user.is_authenticated:
         users = User.objects.filter(is_superuser=False,is_staff=False)
-        return render(request,'adminpage.html',{'users':users})
+        return render(request,'admin_user_page.html',{'users':users})
     else:
         return redirect(home)        
 

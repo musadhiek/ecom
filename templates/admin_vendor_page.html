@@ -1,0 +1,61 @@
+{% extends "adminpage.html" %}
+{% block vendor %}
+<button class="btn btn-outline-success my-2 my-sm-0 " type="submit">
+      <a href="{% url 'add_vendor' %}" style="padding:0%;color:black;align-content: center;">Add New
+            Vendor</a>
+</button>
+{% endblock %}
+
+{% block content %}
+<section>
+      <div style="width: 100%;">
+            <h2 style="text-align: center;">VENDORS</h2>
+            <div class="card mb-4" style="max-width: width auto;">
+                  <div class="card-header">
+                        <i class="fas fa-table mr-1"></i>
+                       <h3 style="margin-left: 10rem;"> VENDOR LIST</h3>
+                  </div>
+                  <div class="card-body" style="margin-left: 10rem;">
+                        <div class="table-responsive">
+                              <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                          <tr>
+                                          <tr>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">Email</th>
+                                                <th scope="col">Edit</th>
+                                                <th scope="col">Delete</th>
+                                          </tr>
+                                          </tr>
+                                    </thead>
+                                    <tfoot>
+
+                                    </tfoot>
+                                    <tbody>
+                                          {% for user in users %}
+                                          <tr>
+                                                <!-- <th scope="row"></th> -->
+                                                <td>{{user.username}}</td>
+                                                <td>{{user.email}}</td>
+                                                <td><a href="/edit_user/{{ user.id}}"><button
+                                                                  class="btn btn-success btn-lg btn-block"
+                                                                  style="width: auto;">Edit</button></a></td>
+                                                <td><a href="/delete_user/{{user.id}}"><button
+                                                                  onclick="return confirm(' Are you sure to delete' ) "
+                                                                  class="btn btn-danger btn-lg btn-block"
+                                                                  style="width: auto;">Delete</button></a>
+                                                </td>
+                                          </tr>
+
+                                          {% endfor %}
+                                    </tbody>
+                              </table>
+                        </div>
+                  </div>
+            </div>
+      </div>
+      </div>
+</section>
+<link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet"
+      crossorigin="anonymous">
+{% endblock %}
