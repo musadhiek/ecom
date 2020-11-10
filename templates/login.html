@@ -3,26 +3,31 @@
 {% block content %}
 <form method="POST">
 	{% csrf_token %}
-<fieldset>
-	<p class="text-uppercase"> Login using your account: </p>
+	<fieldset>
+		{% block user %}
 
-	<div class="form-group">
-		<input type="text" name="username" id="username" class="form-control input-lg" placeholder="username">
-	</div>
-	<p style="color: red;">{{warning}}</p>
-	<div class="form-group">
-		<input type="password" name="password" id="password" class="form-control input-lg" placeholder="Password">
-	</div>
-	<div>
-		<input type="submit" class="btn btn-md" value="Sign In">
-	</div>
-	<div class="text-center">
+		{% endblock %}
+		<div class="form-group">
+			<input type="text" name="username" id="username" class="form-control input-lg" placeholder="username">
+		</div>
+		{% for message in messages %}
+		<h5 style="color: red;">{{message}}</h5>
+		{% endfor %}
+		<div class="form-group">
+			<input type="password" name="password" id="password" class="form-control input-lg" placeholder="Password">
+		</div>
+		
+		<div>
+			<input type="submit" class="btn btn-md" value="Sign In">
+		</div>
+		{% block user_signup %}
+		<!-- <div class="text-center">
 		<a class='nav-link' href="{% url 'user_signup' %}">
 			Don't have an account
 		</a>
-	</div>
-
-</fieldset>
+	</div> -->
+		{% endblock %}
+	</fieldset>
 </form>
 
 {% endblock %}

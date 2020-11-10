@@ -11,37 +11,58 @@ def logout_request(request):
     auth.logout(request)
     return redirect(home)
 
-def login_request(request):
-    
-    if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:    
-        return redirect(userpage)
-    elif request.user.is_authenticated and request.user.is_staff and not request.user.is_superuser:    
-        return redirect(vendorpage)
-
-    elif request.user.is_authenticated and request.user.is_superuser:
-        return redirect(adminpage) 
-    
-    else:
-        if  request.method == 'POST':
+def admin_login(request):
+    if request.user.is_authenticated and request.user.is_superuser:
+        return redirect(adminpage)
+    if  request.method == 'POST':
             username = request.POST['username']
             password = request.POST['password']
         
             user = auth.authenticate(username=username,password=password)
-            if user is not None and not user.is_staff and not user.is_superuser:
-                auth.login(request,user)
-                return redirect(userpage)
-            
-            elif user is not None and user.is_staff and not user.is_superuser:
-                auth.login(request,user)
-                return redirect(vendorpage)
-
-            elif user is not None and user.is_superuser:
+            if user is not None and user.is_superuser:
                 auth.login(request,user)
                 return redirect(adminpage)
-            else:        
-                return render(request,'login.html',{'warning':'incorrect username or password'})    
+            else:
+                messages.error(request,'Incorrect username or password')        
+                return render(request,'admin_login.html',)
+    else:
+        return render(request,'admin_login.html')
 
-    return render(request,'login.html')
+def vendor_login(request):
+    if request.user.is_authenticated and request.user.is_staff and not request.user.is_superuser:    
+        return redirect(vendorpage)
+    
+    if  request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        
+        user = auth.authenticate(username=username,password=password)
+        if user is not None and user.is_staff and not user.is_superuser:
+            auth.login(request,user)
+            return redirect(userpage)
+        else:
+            messages.error(request,'Incorrect username or password')        
+            return render(request,'vendor_login.html')    
+    else:
+        return render(request,'vendor_login.html')   
+
+def user_login(request):
+    if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:    
+        return redirect(userpage)
+    
+    if  request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+    
+        user = auth.authenticate(username=username,password=password)
+        if user is not None and not user.is_staff and not user.is_superuser:
+            auth.login(request,user)
+            return redirect(userpage)
+        else:
+            messages.error(request,'Incorrect username or password')        
+            return render(request,'user_login.html')            
+    else:
+        return render(request,'user_login.html')
 
 def home(request):
     return render(request,'home.html')
@@ -59,6 +80,7 @@ def adminusers(request):
         return render(request,'adminpage.html',{'users':users})
     else:
         return redirect(home)        
+
 def userpage(request):
     if request.user.is_authenticated:
         return render(request,'userpage.html')
@@ -70,6 +92,7 @@ def vendorpage(request):
         return redirect(views.show_products)
     else:
         return redirect(home)
+
 def vendor_signup(request):
     if request.method=='POST':
         username = request.POST['username']
@@ -108,7 +131,6 @@ def add_vendor(request):
         else:
              return render(request, 'add_vendor.html',{'warning':'passwords do not match'})      
     return render(request,'add_vendor.html')
-
 
 def delete_user(request,id):
     user= User.objects.get(id=id)

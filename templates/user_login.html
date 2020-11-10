@@ -1,0 +1,15 @@
+{% extends "login.html" %}
+{% include "add.html" %}
+
+
+{% block user %}
+	<p class="text-uppercase"> Login as customer </p>
+{% endblock %}
+
+{% block user_signup %}
+	<div class="text-center">
+		<a class='nav-link' href="{% url 'user_signup' %}">
+			Don't have an account
+		</a>
+	</div>
+	{% endblock %}
