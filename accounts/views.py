@@ -3,7 +3,9 @@ from django.contrib import auth
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from product import views
+from django.db import models
 from django.contrib import messages
+from product.models import Product
 
 # Create your views here.
 def logout_request(request):
@@ -65,8 +67,11 @@ def user_login(request):
         return render(request,'user_login.html')
 
 def home(request):
-    return render(request,'home.html')
-
+    products = Product.objects.all()
+    if request.user.is_authenticated:
+        return render(request,'userpage.html',{'products':products})
+    else:
+        return render(request,'home.html',{'products':products})
 def admin_vendor_page(request):
     if request.user.is_authenticated:
         users = User.objects.filter(is_superuser=False,is_staff=True)
@@ -83,7 +88,8 @@ def admin_user_page(request):
 
 def userpage(request):
     if request.user.is_authenticated:
-        return render(request,'userpage.html')
+        products =Product.objects.all()
+        return render(request,'userpage.html',{'products':products})
     else:
         return redirect(home)
 

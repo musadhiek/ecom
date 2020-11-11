@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>MP's Ecommerce</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">MPs.com</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="#">Catagories</a></li>
+
+      </ul>
+      <form class="navbar-form navbar-left">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Search" name="search">
+          <div class="input-group-btn">
+            <button class="btn btn-default" type="submit">
+              <i class="glyphicon glyphicon-search"></i>
+            </button>
+          </div>
+        </div>
+
+      </form>
+      <form method="POST">
+        {%csrf_token%}
+
+
+
+        <ul class="nav navbar-nav navbar-right">
+          
+            <li class="form-inline my-2 my-lg-0" style="padding: .25rem .5rem;
+              font-size: .875rem;line-height: 1.5;border-radius: .2rem;">
+              <a class="btn btn-success btn-sm ml-3" href="cart.html">
+                <span class="glyphicon glyphicon-shopping-cart" style="color: whitesmoke;"></span>
+                <span class="badge badge-light">3</span>
+              </a>
+            </li>
+      
+
+          <li><a href="#"><span class="glyphicon glyphicon-user"></span>{{request.user.username}}</a></li>
+          <li><a href="{% url 'logout' %}"> <span class="glyphicon glyphicon-"></span>Logout</a></li>
+
+
+        </ul>
+      </form>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    {% block page %}
+
+    {% endblock %}
+  </div>
+
+</body>
+
+</html>

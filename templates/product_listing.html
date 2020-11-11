@@ -1,0 +1,23 @@
+{% block products %}
+{% for product in products %}
+    <div class="card" >
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12" style="padding: 2%;">
+      <div class="card">
+      <div style="max-width: 20rem;">
+        <img src="{{product.ImageURL}}" class="img-responsive" style="height: 10rem;">
+        <div class="card-body" style="max-height: 100%;width: max-content;">
+          <h5 class="card-title">{{product.title}}</h5>
+          <!-- <p class="card-text">{{product.description}}</p> -->
+          <h3 class="card-price"><p>Price:</p>{{product.price}}</h3>
+          <form method="POST">
+            {%csrf_token%}
+          <a href="{% url 'view_product_details' product.id %}" type="submit" class="btn btn-outline-success btn-sm">View</a>
+          <a href="" class="btn btn-outline-danger btn-sm"><i class="far fa-heart">Add to cart</i></a>
+        </form>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+    {% endfor %}
+{% endblock %}

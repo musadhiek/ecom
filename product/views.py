@@ -4,6 +4,7 @@ from django.contrib.auth.models import User,auth
 from PIL import Image
 from django.core.files.storage import FileSystemStorage
 from django.core.files import File
+from django.contrib.auth import authenticate
 
 
 
@@ -69,3 +70,10 @@ def edit_product(request,id):
     else:
         product=Product.objects.get(id=id)
         return render(request,'edit_product.html',{'product':product})    
+
+def view_product_details(request,id):
+    product = Product.objects.get(id=id)
+    if request.user.is_authenticated:  
+        return render(request,'loggedin_details_view.html',{'product':product})
+    else:
+        return render(request,'loggedout_details_view.html',{'product':product})
