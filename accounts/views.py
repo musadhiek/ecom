@@ -6,6 +6,7 @@ from product import views
 from django.db import models
 from django.contrib import messages
 from product.models import Product
+from purchase.models import OrderItem,Order
 
 # Create your views here.
 def logout_request(request):
@@ -41,7 +42,7 @@ def vendor_login(request):
         user = auth.authenticate(username=username,password=password)
         if user is not None and user.is_staff and not user.is_superuser:
             auth.login(request,user)
-            return redirect(userpage)
+            return redirect(vendorpage)
         else:
             messages.error(request,'Incorrect username or password')        
             return render(request,'vendor_login.html')    
@@ -72,6 +73,7 @@ def home(request):
         return render(request,'userpage.html',{'products':products})
     else:
         return render(request,'home.html',{'products':products})
+
 def admin_vendor_page(request):
     if request.user.is_authenticated:
         users = User.objects.filter(is_superuser=False,is_staff=True)
@@ -85,11 +87,19 @@ def admin_user_page(request):
         return render(request,'admin_user_page.html',{'users':users})
     else:
         return redirect(home)        
-
+def admin_order_page(request):
+    if request.user.is_authenticated:
+        users = User.objects.filter(is_superuser=False,is_staff=False)
+        orders = Order.objects.all()
+        return render(request,'admin_order_history.html',{'orders':orders})
+    else:
+        return redirect(home)  
 def userpage(request):
     if request.user.is_authenticated:
         products =Product.objects.all()
-        return render(request,'userpage.html',{'products':products})
+        item = OrderItem.objects.filter(user=request.user)
+        count = item.count()
+        return render(request,'userpage.html',{'products':products,'count':count})
     else:
         return redirect(home)
 
@@ -133,7 +143,7 @@ def add_vendor(request):
                 user =User.objects.create_user(username=username,email=email,password=password,is_staff=True,is_superuser=False)
                 user.save()
                 users = User.objects.filter(is_superuser=False)
-                return redirect(adminpage)
+                return redirect(admin_vendor_page)
         else:
              return render(request, 'add_vendor.html',{'warning':'passwords do not match'})      
     return render(request,'add_vendor.html')
@@ -141,7 +151,7 @@ def add_vendor(request):
 def delete_user(request,id):
     user= User.objects.get(id=id)
     user.delete()
-    return redirect(adminpage)
+    return redirect(admin_vendor_page)
 
 def user_signup(request):
     if request.method=='POST':
@@ -174,7 +184,7 @@ def add_user(request):
             else:
                 user =User.objects.create_user(username=username,email=email,password=password,is_staff=False,is_superuser=False)
                 user.save()
-                return redirect(adminusers)
+                return redirect(admin_user_page)
         else:
              return render(request, 'add_user.html',{'warning':'passwords do not match'})      
     return render(request,'add_user.html')

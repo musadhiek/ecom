@@ -1,0 +1,62 @@
+{% extends "loggedin_head.html" %}
+{% block page %}
+<div class="container">
+    <form class="form-horizontal" method="POST">
+        {%csrf_token%}
+        <div class="row">
+            <fieldset>
+                <!-- Address form -->
+                <h2>Address</h2>
+                <!-- full-name input-->
+                <div class="control-group">
+                    <label class="control-label">Full Name</label>
+                    <div class="controls">
+                        <input id="full_name" name="full_name" type="text"  value="{{adress.full_name}}"
+                            class="input-xlarge">
+                        <p class="help-block"></p>
+                    </div>
+                </div>
+                <!-- address-line1 input-->
+                <!-- city input-->
+                <div class="control-group">
+                    <label class="control-label">City / Town</label>
+                    <div class="controls">
+                        <input id="city" name="city" type="text"  value="{{address.city}}"
+                            class="input-xlarge">
+                        <p class="help-block"></p>
+                    </div>
+                </div>
+                <!-- region input-->
+                <div class="control-group">
+                    <label class="control-label">State / Province / Region</label>
+                    <div class="controls">
+                        <input id="state" name="state" type="text" 
+                            value="{{address.state}}" class="input-xlarge">
+                        <p class="help-block"></p>
+                    </div>
+                </div>
+                <!-- postal-code input-->
+                <div class="control-group">
+                    <label class="control-label">Zip / Postal Code</label>
+                    <div class="controls">
+                        <input id="pincode" name="pincode" type="text" placeholder="{{address.pincode}}"
+                            value="{{address.pincode}}" class="input-xlarge">
+                        <p class="help-block"></p>
+                    </div>
+                </div>
+                <!-- country select -->
+               
+            </fieldset>
+        </div>
+        <div class="col mb-2">
+            <div class="row">
+                <div class="col-sm-12 col-md-6 text-right">
+                    <button type="submit" href="{% url 'confirm_purchase' %}"
+                        class="btn btn-lg btn-block btn-success text-uppercase">Continue</button>
+                    
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

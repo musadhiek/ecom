@@ -25,10 +25,11 @@ def add_product(request):
         price = request.POST['price']
         quantity = request.POST['quantity']
         image = request.FILES.get('image')
-        # if request.user.is_superuser:
-        #     vendor = request.POST['vendor_id']
-        # else:    
-        vendor= request.user
+        if request.user.is_superuser:
+            vendor_id = int(request.POST['vendor_id'])
+            vendor = User.objects.get(id=vendor_id)
+        else:    
+            vendor= request.user
         product = Product.objects.create(title=title,description=description,price=price,quantity=quantity,image=image,vendor=vendor)
         product.save()
         return redirect(show_products)

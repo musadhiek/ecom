@@ -1,9 +1,4 @@
-{% extends "loggedin_head.html" %}
-<!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
-<!------ Include the above in your HEAD tag ---------->
-{% block page %}
+{% block order_history %}
 <style>
     .bloc_left_price {
     color: #c01508;
@@ -65,38 +60,46 @@ footer a {
 
 <section class="jumbotron text-center">
     <div class="container">
-        <h1 class="jumbotron-heading">E-COMMERCE CART</h1>
-        <p>{{message}}</p>
+        <h1 class="jumbotron-heading">Order History</h1>
+        
      </div>
 </section>
 
 <div class="container mb-4">
     <div class="row">
+        
         <div class="col-12">
             <div class="table-responsive">
+                
                 <table class="table table-striped">
                     <thead>
                         <tr>
                             <th scope="col"> Image</th>
                             <th scope="col">Product</th>
-                            <th scope="col">Available</th>
+                            <!-- <th scope="col">Available</th> -->
                             <th scope="col" class="text-center">Quantity</th>
-                            <th scope="col" class="text-right">Unit Price</th>
-                            <th scope="col" class="text-right">Total</th>
+                            <th scope="col" class="text-right">Price</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for item in items %}
-                        <tr>
-                            <td><img src="{{ item.product.ImageURL}}"class="img-responsive" style="height: 7rem;" /> </td>
-                            <td>{{item.product.title}}</td>
-                            <td>In stock</td>
-                            <td>{{item.quantity}}</td>
-                            <!-- <td><input class="form-control" type="text" value="1" /></td> -->
-                            <td class="text-right">{{item.product.price}}</td>
-                            <td class="text-right">{{item.price}}</td>
-                            <!-- <td class="text-right"><button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button> </td> -->
-                        </tr>
+                        {% for transaction_id, orders in dict.items %}
+                            <tr>
+                                <th scope="col"> transcation Id</th>
+                                <th scope="col"><h>{{transaction_id}}</h></th>      
+                            </tr>
+                            {% for order in orders %}
+                                <tr>
+                                    <td><img src="{{ order.product.ImageURL}}"class="img-responsive" style="height: 7rem;" /> </td>
+                                    <td>{{order.product.title}}</td>
+                                    <!-- <td>In stock</td> -->
+                                    <td>{{order.quantity}}</td>
+                                    <!-- <td><input class="form-control" type="text" value="1" /></td> -->
+                                    <td class="text-right">{{order.product.price}}</td>
+                                    <!-- <td class="text-right"><button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button> </td> -->
+                                </tr>
+                                
+                        
+                            {% endfor %}
                         {% endfor %}
                     </tbody>
                 </table>

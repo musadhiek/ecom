@@ -20,6 +20,7 @@
       <ul class="nav navbar-nav">
         <li><a href="{% url 'home' %}">Home</a></li>
         <li><a href="#">Catagories</a></li>
+        <li><a href="{% url 'order_history' %}">Orders</a></li>
 
       </ul>
       <form class="navbar-form navbar-left">
@@ -33,28 +34,20 @@
         </div>
 
       </form>
-      <form method="POST">
-        {%csrf_token%}
-
-
-
         <ul class="nav navbar-nav navbar-right">
-          
             <li class="form-inline my-2 my-lg-0" style="padding: .25rem .5rem;
               font-size: .875rem;line-height: 1.5;border-radius: .2rem;">
-              <a class="btn btn-success btn-sm ml-3" href="cart.html">
+              <a class="btn btn-success btn-sm ml-3" href="{% url 'show_cart' %}">
                 <span class="glyphicon glyphicon-shopping-cart" style="color: whitesmoke;"></span>
-                <span class="badge badge-light">3</span>
+                <span class="badge badge-light">{{count}}</span>
               </a>
             </li>
-      
-
           <li><a href="#"><span class="glyphicon glyphicon-user"></span>{{request.user.username}}</a></li>
           <li><a href="{% url 'logout' %}"> <span class="glyphicon glyphicon-"></span>Logout</a></li>
 
 
         </ul>
-      </form>
+      </div>
     </div>
   </nav>
 

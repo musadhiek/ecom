@@ -14,6 +14,7 @@
       <thead>
             <tr>
                   <!-- <th scope="col">Vendor</th> -->
+                  <th scope="col">vendor</th>
                   <th scope="col">Title</th>
                   <th scope="col">Image</th>
                   <th scope="col">Description</th>
@@ -32,9 +33,8 @@
                   <option>{{product.title}}</option>
                   {% endfor %}
             </select></td> -->
-            
+            <td>{{product.vendor.username}}</td>
             <td>{{product.title}}</td>
-
             <td ><img style="height: 100px; width: 100px;" src="{{product.ImageURL}}"> </td>
             <td>{{product.description}}</td>
             <td>{{product.price}}</td>
