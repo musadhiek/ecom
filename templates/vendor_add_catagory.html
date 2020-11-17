@@ -1,0 +1,18 @@
+{% extends "add.html" %}
+{% block content %}
+<form method="POST"  enctype="multipart/form-data">
+	{% csrf_token %}
+<fieldset>
+	<p class="text-uppercase pull-center"> Add New Catagory</p>
+	
+	
+	<div class="form-group">
+		<input type="text" name="name" id="name" class="form-control input-lg" required="required" placeholder="name">
+	</div>
+	
+	<div>
+		<input type="submit" class="btn btn-lg btn-primary   value=" Add">
+	</div>
+</fieldset>
+</form>
+{% endblock %}

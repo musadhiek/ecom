@@ -20,7 +20,8 @@
       <ul class="nav navbar-nav">
 
         <li><a href="{% url 'show_products'%}">Products</a></li>
-        <li><a href="#">Orders</a></li>
+        <li><a href="{% url 'vendor_order' %}">Orders</a></li>
+        <li><a href="{% url 'vendor_add_catagory' %}">ADD Catagory</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li style="margin-top: 1rem;"><button class="btn btn-outline-success my-2 my-sm-0 " type="submit">

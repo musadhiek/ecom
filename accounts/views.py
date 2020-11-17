@@ -70,7 +70,9 @@ def user_login(request):
 def home(request):
     products = Product.objects.all()
     if request.user.is_authenticated:
-        return render(request,'userpage.html',{'products':products})
+        count = OrderItem.objects.filter(user=request.user).count()
+        context = {'products':products,'count':count}
+        return render(request,'userpage.html',context)
     else:
         return render(request,'home.html',{'products':products})
 
@@ -97,8 +99,8 @@ def admin_order_page(request):
 def userpage(request):
     if request.user.is_authenticated:
         products =Product.objects.all()
-        item = OrderItem.objects.filter(user=request.user)
-        count = item.count()
+        count = OrderItem.objects.filter(user=request.user).count()
+        
         return render(request,'userpage.html',{'products':products,'count':count})
     else:
         return redirect(home)

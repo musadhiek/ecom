@@ -75,29 +75,49 @@ footer a {
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th scope="col"> Image</th>
+                            <!-- <th scope="col"> Order id</th> -->
+                            <th scope="col"> user</th>
+                            <!-- <th scope="col"> Image</th> -->
                             <th scope="col">Product</th>
                             <!-- <th scope="col">Available</th> -->
                             <th scope="col" class="text-center">Quantity</th>
-                            <th scope="col" class="text-right">Price</th>
+                            <th scope="col" class="text-right">Unit Price</th>
+                            <th scope="col" class="text-right"> Total Price</th>
+                            <th scope="col" class="text-right">Ordered</th>
+                            <th scope="col" class="text-right">Delivered</th>
+                            <th scope="col" class="text-right">Cancel</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody>{% for transaction_id, orders in dict.items %}
+                        <tr>
+                            <th scope="col"> transcation Id</th>
+                            <th scope="col"><h>{{transaction_id}}</h></th>
+                            <th colspan="6"><a href="#"><button onclick="return confirm('Are you sure to remove')"
+                                class="btn btn-outline-danger  btn-block"  style="width: auto;float:right;">DELETE</button>
+                             </a> </th>      
+                        </tr>
                     
                             {% for order in orders %}
                                 <tr>
-                                    <td><img src="{{ order.product.ImageURL}}"class="img-responsive" style="height: 7rem;" /> </td>
+                                    <td>{{order.user.username}}</td>
+                                    <!-- <td><img src="{{ order.product.ImageURL}}"class="img-responsive" style="height: 7rem;" /> </td> -->
                                     <td>{{order.product.title}}</td>
                                     <!-- <td>In stock</td> -->
-                                    <td>{{order.quantity}}</td>
+                                    <td style="text-align: right;">{{order.quantity}}</td>
                                     <!-- <td><input class="form-control" type="text" value="1" /></td> -->
                                     <td class="text-right">{{order.product.price}}</td>
+                                    <td class="text-right">{{order.orderitem.price}}</td>
                                     <!-- <td class="text-right"><button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button> </td> -->
+                                    <td class="text-right">{{order.complete}}</td>
+                                    <td class="text-right">{{order.delivered}}</td>    
                                 </tr>
+                                <tr>
+                                    
+                                </tr>                                
                                 
                         
                             {% endfor %}
-                        
+                            {% endfor %}
                     </tbody>
                 </table>
             </div>

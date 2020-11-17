@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
-from .models import Product
+from .models import Product,Catagory
+# from purchase.models import Catagory
 from django.contrib.auth.models import User,auth 
 from PIL import Image
 from django.core.files.storage import FileSystemStorage
@@ -18,6 +19,19 @@ def show_products(request):
         products= Product.objects.filter(vendor_id=id)
         return render(request,'vendor_products.html',{'products':products})
 
+def vendor_add_catagory(request):
+    if request.method=='POST':
+        name = request.POST['name']
+        catagory = Catagory.objects.create(name=name)
+        catagory.save()
+        return redirect(show_products)
+    else:
+        return render(request,'vendor_add_catagory.html')    
+
+def show_catagory_products(request):
+    if request.user.is_authenticated:
+        products= Product.objects.filter()
+        return render(request,'admin_products.html',{'products':products})
 def add_product(request):
     if request.method=='POST':
         title = request.POST['title']
@@ -25,12 +39,14 @@ def add_product(request):
         price = request.POST['price']
         quantity = request.POST['quantity']
         image = request.FILES.get('image')
+        catagory_id = int(request.POST['catagory_id'])
+        catagory = Catagory.objects.get(id=catagory_id)
         if request.user.is_superuser:
             vendor_id = int(request.POST['vendor_id'])
             vendor = User.objects.get(id=vendor_id)
         else:    
             vendor= request.user
-        product = Product.objects.create(title=title,description=description,price=price,quantity=quantity,image=image,vendor=vendor)
+        product = Product.objects.create(title=title,catagory=catagory, description=description,price=price,quantity=quantity,image=image,vendor=vendor)
         product.save()
         return redirect(show_products)
     else:
@@ -38,7 +54,8 @@ def add_product(request):
             user = User.objects.filter(is_staff=True,is_superuser=False)
             return render(request,'admin_add_product.html',{'user':user})
         else:
-            return render(request,'vendor_add_product.html')   
+            catagories = Catagory.objects.all()
+            return render(request,'vendor_add_product.html',{'catagories':catagories})   
 
 def delete_product(request,id):
     product= Product.objects.get(id=id)

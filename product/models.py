@@ -1,10 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
+from .models import *
 
 # Create your models here.
+class Catagory(models.Model):
+    name = models.CharField(max_length=200,null=True)
+
 class Product(models.Model):
     title = models.CharField(max_length=120)
+    catagory = models.ForeignKey(Catagory,on_delete=models.CASCADE,null=True,blank=True)
     description = models.TextField(null=True,blank=True)
     price = models.DecimalField(decimal_places=2,max_digits=100,default=1.00)
     quantity = models.IntegerField(default=0)
@@ -22,3 +27,4 @@ class Product(models.Model):
             url = ''
 
         return url        
+

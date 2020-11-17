@@ -4,13 +4,13 @@
 	{% csrf_token %}
 <fieldset>
 	<p class="text-uppercase pull-center"> Add New Product</p>
-	<!-- <div class="form-group">
-		<select>
-			{% for vendor in vendor %}
-			<option>{{vendor.username}}</option>
+	 <div class="form-group">
+		<select name="catagory_id">
+			{% for catagory in catagories %}
+			<option value="{{catagory.id}}"  >{{catagory.name}}}</option>
 			{% endfor %}
 		</select>
-	</div> -->
+	
 	<div class="form-group">
 		<input type="text" name="title" id="title" class="form-control input-lg" required="required" placeholder="title">
 	</div>

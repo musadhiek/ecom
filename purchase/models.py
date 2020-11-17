@@ -3,27 +3,6 @@ from .models import *
 from django.contrib.auth.models import User
 from product.models import Product
 
-# Create your models here.
-class Order(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
-    product = models.ForeignKey(Product,on_delete=models.CASCADE,null=True,blank=True)
-    quantity = models.IntegerField(default=1,null=True,blank=True)
-    complete = models.BooleanField(default=False)
-    transaction_id = models.CharField(max_length=200,null=True)
-    delivered = models.BooleanField(default=False)
-
-
-class OrderItem(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
-    product = models.ForeignKey(Product,on_delete=models.CASCADE,blank=True,null=True)
-    quantity =models.IntegerField(default=1,null=True,blank=True)
-    price = models.DecimalField(decimal_places=2,max_digits=20,null=True,blank=True)
-
-    # @property
-    # def get_total (self):
-    #     total = self.product.price * quantity
-    #     return total
-
 
 class ShippingAddress(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,blank=True,null=True)
@@ -31,3 +10,30 @@ class ShippingAddress(models.Model):
     city = models.CharField(max_length=200, null=True)
     state = models.CharField(max_length=200,null=True)
     pincode = models.CharField(max_length=6,null=True)
+
+class OrderItem(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
+    product = models.ForeignKey(Product,on_delete=models.CASCADE,blank=True,null=True)
+    quantity =models.IntegerField(default=1,null=True,blank=True)
+    price = models.DecimalField(decimal_places=2,max_digits=20,null=True,blank=True)
+# Create your models here.
+class Order(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='user',null=True,blank=True)
+    product = models.ForeignKey(Product,on_delete=models.CASCADE,null=True,blank=True)
+    # vendor = models.ForeignKey(User,on_delete=models.CASCADE,null=True,related_name='vendor',blank=True)
+    orderitem = models.ForeignKey(OrderItem,on_delete=models.SET_NULL,null=True,blank=True)
+    quantity = models.IntegerField(default=1,null=True,blank=True)
+    complete = models.BooleanField(default=False)
+    transaction_id = models.CharField(max_length=200,null=True)
+    delivered = models.BooleanField(default=False)
+
+
+
+
+    # @property
+    # def get_total (self):
+    #     total = self.product.price * quantity
+    #     return total
+
+
+

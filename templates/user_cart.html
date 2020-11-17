@@ -79,26 +79,51 @@ footer a {
                         <tr>
                             <th scope="col"> Image</th>
                             <th scope="col">Product</th>
-                            <th scope="col">Available</th>
+                            <!-- <th scope="col">Available</th> -->
                             <th scope="col" class="text-center">Quantity</th>
                             <th scope="col" class="text-right">Unit Price</th>
                             <th scope="col" class="text-right">Total</th>
+                            <th scope="col" class="text-right">Delete</th>
+
+                            <!-- <th scope="col" class="text-right">Ordered</th>
+                            <th scope="col" class="text-right">Delivered</th> -->
+
                         </tr>
                     </thead>
                     <tbody>
                         {% for item in items %}
+                        
                         <tr>
                             <td><img src="{{ item.product.ImageURL}}"class="img-responsive" style="height: 7rem;" /> </td>
                             <td>{{item.product.title}}</td>
-                            <td>In stock</td>
-                            <td>{{item.quantity}}</td>
+                            <!-- <td class="text-right">In stock</td> -->
+                            
+                            <td style="text-align: center;"><a href="{% url 'remove_one_quantity' item.product.id %}"><span class="glyphicon glyphicon-minus"></span></a>
+                                {{item.quantity}}
+                                <a href="{% url 'add_one_quantity' item.product.id %}">
+                                    <span class="glyphicon glyphicon-plus"></span></a></td>
+                                
                             <!-- <td><input class="form-control" type="text" value="1" /></td> -->
-                            <td class="text-right">{{item.product.price}}</td>
+                            <td class="text-right">
+                                {{item.product.price}}</td>
                             <td class="text-right">{{item.price}}</td>
+                           
+                            <td ><a href="{% url 'delete_cart_item' item.product.id %}"><button onclick="return confirm('Are you sure to remove')"
+                                class="btn btn-outline-danger  btn-block"  style="width: auto;float:right;">DELETE</button>
+                             </a> </td>
+                           
+
                             <!-- <td class="text-right"><button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button> </td> -->
                         </tr>
+                    
                         {% endfor %}
+                    
+                        <!-- <h2>{{message}}</h2> -->
                     </tbody>
+                    <tr>
+                        <td colspan="4"><h3>Total</h3></td>
+                        <td style="text-align: right;" >{{total}}</td>
+                    </tr>
                 </table>
             </div>
         </div>
@@ -108,12 +133,12 @@ footer a {
                 <div class="col-sm-12  col-md-6">
                     <a href="{% url 'home' %}" class="btn btn-block btn-light">Continue Shopping
                     </a></div>
-            
+                    
                 <div class="col-sm-12 col-md-6 text-right">
                    <a href="{% url 'confirm_purchase' %}" class="btn btn-lg btn-block btn-success text-uppercase">Checkout
                    </a></div>
             </div>
-            
+                
         </div>
     </div>
 </div>
