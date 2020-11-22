@@ -1,0 +1,61 @@
+{% extends "loggedin_head.html" %}
+{% block page %}
+<div class="col-md-8">
+    <div class="card mb-3">
+      <div class="card-body">
+        <form method="POST" action="{% url 'save_address' %}">
+          {% csrf_token %}
+        
+          <div class="row">
+              <div class="col-md-6">
+                  <h3><b>New Address</b></h3>
+              </div>
+              <div class="col-md-6">
+                  <button class="btn btn-primary" style="float: right;">Save Address</button>
+
+              </div>       
+          </div>
+        <div class="row">
+          <div class="col-sm-3">
+            <h6 class="mb-0">Phone</h6>
+          </div>
+          <div class="col-sm-9 text-secondary" style="margin-top: .6rem;">
+            <input type="text" name="phone" placeholder="phone">
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Address</h6>
+            </div>
+            <div class="col-sm-9 text-secondary" style="margin-top: .6rem;">
+              <input type="text" name="address" placeholder="address" required="required">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">City</h6>
+            </div>
+            <div class="col-sm-9 text-secondary" style="margin-top: .6rem;">
+              <input type="text" name="city" placeholder="city" required="required">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">state</h6>
+            </div>
+            <div class="col-sm-9 text-secondary" style="margin-top: .6rem;">
+              <input type="text" name="state" placeholder="state" required="required">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Postal Code</h6>
+            </div>
+            <div class="col-sm-9 text-secondary" style="margin-top: .6rem;">
+              <input type="text" name="postal_code" placeholder="postal code" required="required">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+{% endblock %}

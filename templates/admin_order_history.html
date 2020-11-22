@@ -92,7 +92,7 @@ footer a {
                         <tr>
                             <th scope="col"> transcation Id</th>
                             <th scope="col"><h>{{transaction_id}}</h></th>
-                            <th colspan="6"><a href="#"><button onclick="return confirm('Are you sure to remove')"
+                            <th colspan="6"><a href="{% url 'admin_order_delete' transaction_id %}"><button onclick="return confirm('Are you sure to remove')"
                                 class="btn btn-outline-danger  btn-block"  style="width: auto;float:right;">DELETE</button>
                              </a> </th>      
                         </tr>

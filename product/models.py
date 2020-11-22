@@ -7,6 +7,9 @@ from .models import *
 class Catagory(models.Model):
     name = models.CharField(max_length=200,null=True)
 
+    def __str__(self):
+       return(self.name)
+
 class Product(models.Model):
     title = models.CharField(max_length=120)
     catagory = models.ForeignKey(Catagory,on_delete=models.CASCADE,null=True,blank=True)
@@ -28,3 +31,5 @@ class Product(models.Model):
 
         return url        
 
+    def __str__(self):
+       return(self.title)

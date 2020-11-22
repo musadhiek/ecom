@@ -6,10 +6,12 @@ from product.models import Product
 
 class ShippingAddress(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,blank=True,null=True)
+    phone = models.CharField(max_length=15 ,null=True,blank=True)
     address = models.CharField(max_length=200, null=True)
     city = models.CharField(max_length=200, null=True)
     state = models.CharField(max_length=200,null=True)
-    pincode = models.CharField(max_length=6,null=True)
+    pincode = models.CharField(max_length=10,null=True)
+    default_address = models.BooleanField(default=False)
 
 class OrderItem(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
@@ -26,6 +28,7 @@ class Order(models.Model):
     complete = models.BooleanField(default=False)
     transaction_id = models.CharField(max_length=200,null=True)
     delivered = models.BooleanField(default=False)
+    delivery_address = models.ForeignKey(ShippingAddress,on_delete=models.SET_NULL,blank=True,null=True)
 
 
 

@@ -10,11 +10,13 @@ urlpatterns = [
     
     path('logout_request',views.logout_request,name='logout'),
     
+    path('admin_dashboard',views.admin_dashboard,name='admin_dashboard'),
     path('admin_page',views.admin_vendor_page,name='admin_page'),
     path('adminusers',views.admin_user_page,name='adminusers'),
     path('admin_orders',views.admin_order_page,name='admin_orders'),
     
     path('user_page', views.userpage,name='user_page'),
+    path('user_profile',views.user_profile, name='user_profile'),
     path('vendor_page',views.vendorpage,name='vendor_page'),
     
     path('vendor_signup',views.vendor_signup,name='vendor_signup'),

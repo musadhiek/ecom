@@ -17,26 +17,24 @@
       <div class="navbar-header">
         <a class="navbar-brand" href="#">MPs.com</a>
       </div>
-      <ul class="nav navbar-nav">
+      <ul class="nav navbar-nav navbar-left">
         <li><a href="{% url 'home' %}">Home</a></li>
-        <li><a href="#">Catagories</a></li>
-        {% if request.user.is_authenticated %}
-        <li><a href="{% url 'order_history' %}">Orders</a></li>
-        {% endif %}
-      </ul>
-      <form class="navbar-form navbar-left">
-        <div class="input-group">
-          <input type="text" class="form-control" placeholder="Search" name="search">
-          <div class="input-group-btn">
-            <button class="btn btn-default" type="submit">
-              <i class="glyphicon glyphicon-search"></i>
-            </button>
+        <li><a href="{% url 'order_history' %}">Order</a></li>
+        <div class="dropdown" style="float: right;margin-top: 1rem;">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Catagories
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            {% for catagory in catagories %}
+              <a class="dropdown-item" href="{% url 'catagory_items' catagory.id %}">
+                  <p>{{catagory.name}}</p>
+              </a>
+            {% endfor %}
           </div>
         </div>
-
-      </form>
+      </ul>
       {% if request.user.is_authenticated %}
-        <ul class="nav navbar-nav navbar-right">
+        <ul class="nav navbar-nav navbar-right float-right">
             <li class="form-inline my-2 my-lg-0" style="padding: .25rem .5rem;
               font-size: .875rem;line-height: 1.5;border-radius: .2rem;">
               <a class="btn btn-success btn-sm ml-3" href="{% url 'show_cart' %}">
@@ -44,17 +42,14 @@
                 <span class="badge badge-light">{{count}}</span>
               </a>
             </li>
-          <li><a href="#"><span class="glyphicon glyphicon-user"></span>{{request.user.username}}</a></li>
+          <li><a href="{% url 'user_profile' %}"><span class="glyphicon glyphicon-user"></span>{{request.user.username}}</a></li>
           <li><a href="{% url 'logout' %}"> <span class="glyphicon glyphicon-"></span>Logout</a></li>
         </ul>
         {% else %}
-        <form method="POST">
-          {%csrf_token%}
           <ul class="nav navbar-nav navbar-right">
             <li><a href="{% url 'user_signup' %}" class="glyphicon glyphicon-user"> SignUp</a></li>
             <li><a href="{% url 'user_login' %}" class="glyphicon glyphicon-log-in"> Login</a></li>
           </ul>
-        </form>
         {% endif %}
       </div>
     </div>

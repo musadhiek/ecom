@@ -1,62 +1,207 @@
 {% extends "loggedin_head.html" %}
 {% block page %}
 <div class="container">
-    <form class="form-horizontal" method="POST">
-        {%csrf_token%}
+  {% if delivery_address %}
+    <form class="form-horizontal">
+  <!--Main layout-->
+  <main class="mt-5 pt-4">
+    <div class="container wow fadeIn">
+
+      <!-- Heading -->
+      <h2 class="my-5 h2" style="margin-left: 20rem;">Checkout form</h2>
+
+      <!--Grid row-->
+      <div class="row">
+        <form>
+          <div class="col-md-7">
+            <a href="{% url 'change_address' %}">
+                  <button type="button" class="btn btn-primary" style="float: right;">Change Address</button>
+                </a> 
+              </div> 
+            </form>
+        <!--Grid column-->
+        <div class="col-md-8 mb-4">
+
+          <!--Card-->
+          <div class="card">
+
+            <!--Card content-->
+            <form class="card-body">
+
+              
+            
+
+              </div>
+              <!--Grid row-->
+
+              <!--Username-->
+              <div class="row">
+                <div class="col-sm-3">
+                  <h4 class="mb-0">Phone</h4>
+                </div>
+                <div class="col-sm-9 text-secondary" style="margin-top: .6rem;">
+                  <h4>{{delivery_address.phone}}</h4>
+                </div>
+              </div>
+
+              <!--address-->
+              <div class="row">
+                <div class="col-sm-3">
+                  <h4 class="mb-0">Address</h4>
+                </div>
+                <div class="col-sm-9 text-secondary" style="margin-top: .6rem;">
+                  <h4>{{delivery_address.address}}</h4>
+                </div>
+              </div>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h4 class="mb-0">City</h4>
+                  </div>
+                  <div class="col-sm-9 text-secondary" style="margin-top: .6rem;">
+                    <h4>{{delivery_address.city}}</h4>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h4 class="mb-0">State</h4>
+                  </div>
+                  <div class="col-sm-9 text-secondary" style="margin-top: .6rem;">
+                    <h4>{{delivery_address.state}}</h4>
+                  </div>
+                </div>
+              
+             
+              <div class="row">
+                <div class="col-sm-3">
+                  <h4 class="mb-0">Postal code</h4>
+                </div>
+                <div class="col-sm-9 text-secondary" style="margin-top: .6rem;">
+                  <h4>{{delivery_address.pincode}}</h4>
+                </div>
+              </div>
+              <!--Grid row-->
+              <div class="row">
+              <!-- </div>clastn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button> --> 
+              <div id="paypal-button-container"></div>
+
+              <!-- Include the PayPal JavaScript SDK -->
+              <script src="https://www.paypal.com/sdk/js?client-id=AdttXaZLfgdm8IoqHTj6x-W5upG07TN-fDKsnoDder-Hxif4nrpIY95ymI5kiNaIa_j9iiHjKoUN3Ai-&currency=USD"></script>
+          
+              <script>
+                  // Render the PayPal button into #paypal-button-container
+                  paypal.Buttons({
+          
+                      // Set up the transaction
+                      createOrder: function(data, actions) {
+                          return actions.order.create({
+                              purchase_units: [{
+                                  amount: {
+                                      value: '{{order_total}}'
+                                  }
+                              }]
+                          });
+                      },
+          
+                      // Finalize the transaction
+                      onApprove: function(data, actions) {
+                          return actions.order.capture().then(function(details) {
+                              // Show a success message to the buyer
+                              alert('Transaction completed by ' + details.payer.name.given_name + '!');
+                          });
+                      }
+          
+          
+                  }).render('#paypal-button-container');
+              </script>
+            </form>
+  {% else %}
+  <form class="form-horizontal">
+    <!--Main layout-->
+    <main class="mt-5 pt-4">
+      <div class="container wow fadeIn">
+        <!-- Heading -->
+        <h2 class="my-5 h2 text-center">Checkout form</h2>
+        <!--Grid row-->
         <div class="row">
-            <fieldset>
-                <!-- Address form -->
-                <h2>Address</h2>
-                <!-- full-name input-->
-                <div class="control-group">
-                    <label class="control-label">Full Name</label>
-                    <div class="controls">
-                        <input id="full_name" name="full_name" type="text"  value="{{adress.full_name}}"
-                            class="input-xlarge">
-                        <p class="help-block"></p>
-                    </div>
+          <!--Grid column-->
+          <div class="col-md-8 mb-4">
+            <!--Card-->
+            <div class="card">
+             <!--Card content-->
+              <!-- <form class="card-body"> -->
+                <form>
+                <div class="col-md-6">
+                  <a href="{% url 'add_shipping_address'  %}"><button type="button" class="btn btn-primary" style="float: right;">Add Delivery Address</button>
+                  </a>    
                 </div>
-                <!-- address-line1 input-->
-                <!-- city input-->
-                <div class="control-group">
-                    <label class="control-label">City / Town</label>
-                    <div class="controls">
-                        <input id="city" name="city" type="text"  value="{{address.city}}"
-                            class="input-xlarge">
-                        <p class="help-block"></p>
-                    </div>
-                </div>
-                <!-- region input-->
-                <div class="control-group">
-                    <label class="control-label">State / Province / Region</label>
-                    <div class="controls">
-                        <input id="state" name="state" type="text" 
-                            value="{{address.state}}" class="input-xlarge">
-                        <p class="help-block"></p>
-                    </div>
-                </div>
-                <!-- postal-code input-->
-                <div class="control-group">
-                    <label class="control-label">Zip / Postal Code</label>
-                    <div class="controls">
-                        <input id="pincode" name="pincode" type="text" placeholder="{{address.pincode}}"
-                            value="{{address.pincode}}" class="input-xlarge">
-                        <p class="help-block"></p>
-                    </div>
-                </div>
-                <!-- country select -->
-               
-            </fieldset>
+              </form>
+              <!-- </form> -->
+  {% endif %}
+          </div>
+          <!--/.Card-->
+
         </div>
-        <div class="col mb-2">
-            <div class="row">
-                <div class="col-sm-12 col-md-6 text-right">
-                    <button type="submit" href="{% url 'confirm_purchase' %}"
-                        class="btn btn-lg btn-block btn-success text-uppercase">Continue</button>
-                    
-                </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+        <div class="col-md-4 mb-4">
+
+          <!-- Heading -->
+          <h4 class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-muted">Your cart</span>
+            <span class="badge badge-secondary badge-pill">{{count}}</span>
+          </h4>
+
+          <!-- Cart -->
+          <ul class="list-group mb-3 z-depth-1">
+            {% for item in items %}
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div>
+                <h6 class="my-0">{{item.product.title}}</h6>
+                <small class="text-muted">{{item.product.description}}</small>
+              </div>
+              <span class="text-muted">{{item.price}}</span>
+            </li>
+            {% endfor %}
+            
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Total (US)</span>
+              <strong>${{order_total}}</strong>
+            </li>
+          </ul>
+          <!-- Cart -->
+
+          <!-- Promo code -->
+          <form class="card p-2">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Promo code" aria-label="Recipient's username" aria-describedby="basic-addon2">
+              <div class="input-group-append">
+                <button class="btn btn-secondary btn-md waves-effect m-0" type="button">Redeem</button>
+              </div>
             </div>
+          </form>
+          <!-- Promo code -->
+
         </div>
-    </form>
-</div>
+        <!--Grid column-->
+
+      </div>
+      <!--Grid row-->
+
+    </div>
+  </main>
+  <!--Main layout-->
+
+  <!--Footer-->
+  <footer class="page-footer text-center font-small mt-4 wow fadeIn">
+
+    
+
+    <hr class="my-4">
+
+    <!-- Social icons -->
+    
+    
+  </footer>
+  <!--/.Footer-->
 {% endblock %}

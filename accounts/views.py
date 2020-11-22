@@ -5,8 +5,8 @@ from django.contrib.auth import authenticate
 from product import views
 from django.db import models
 from django.contrib import messages
-from product.models import Product
-from purchase.models import OrderItem,Order
+from product.models import Product, Catagory
+from purchase.models import OrderItem,Order,ShippingAddress
 
 # Create your views here.
 def logout_request(request):
@@ -24,7 +24,7 @@ def admin_login(request):
             user = auth.authenticate(username=username,password=password)
             if user is not None and user.is_superuser:
                 auth.login(request,user)
-                return redirect(admin_vendor_page)
+                return redirect(admin_dashboard)
             else:
                 messages.error(request,'Incorrect username or password')        
                 return render(request,'admin_login.html',)
@@ -69,13 +69,18 @@ def user_login(request):
 
 def home(request):
     products = Product.objects.all()
+    catagories = Catagory.objects.all()
     if request.user.is_authenticated:
         count = OrderItem.objects.filter(user=request.user).count()
-        context = {'products':products,'count':count}
+        
+        context = {'products':products,'count':count,'catagories':catagories}
         return render(request,'userpage.html',context)
     else:
-        return render(request,'home.html',{'products':products})
+        context = {'products':products,'catagories':catagories}
+        return render(request,'home.html',context)
 
+def admin_dashboard(request):
+    return render(request,"admin_dashboard.html")
 def admin_vendor_page(request):
     if request.user.is_authenticated:
         users = User.objects.filter(is_superuser=False,is_staff=True)
@@ -89,6 +94,7 @@ def admin_user_page(request):
         return render(request,'admin_user_page.html',{'users':users})
     else:
         return redirect(home)        
+
 def admin_order_page(request):
     if request.user.is_authenticated:
         users = User.objects.filter(is_superuser=False,is_staff=False)
@@ -96,14 +102,27 @@ def admin_order_page(request):
         return render(request,'admin_order_history.html',{'orders':orders})
     else:
         return redirect(home)  
+
 def userpage(request):
     if request.user.is_authenticated:
+        catagories = Catagory.objects.all()
         products =Product.objects.all()
         count = OrderItem.objects.filter(user=request.user).count()
         
-        return render(request,'userpage.html',{'products':products,'count':count})
+        return render(request,'userpage.html',{'products':products,'count':count,'catagories':catagories})
     else:
         return redirect(home)
+
+def user_profile(request):
+    shipping_address = ShippingAddress.objects.filter(user=request.user,default_address=False)
+    if ShippingAddress.objects.filter(user=request.user,default_address=True).exists():
+        primary_address = ShippingAddress.objects.get(user=request.user,default_address=True)
+        context = {'shipping_address':shipping_address,'primary_address':primary_address}
+        return render(request,'user_profile.html',context)
+    else:
+        context = {'shipping_address':shipping_address}
+        return render(request,'user_profile.html',context)
+
 
 def vendorpage(request):
     if request.user.is_authenticated:

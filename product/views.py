@@ -3,6 +3,8 @@ from .models import Product,Catagory
 # from purchase.models import Catagory
 from django.contrib.auth.models import User,auth 
 from PIL import Image
+import base64
+from django.core.files.base import ContentFile
 from django.core.files.storage import FileSystemStorage
 from django.core.files import File
 from django.contrib.auth import authenticate
@@ -28,17 +30,31 @@ def vendor_add_catagory(request):
     else:
         return render(request,'vendor_add_catagory.html')    
 
-def show_catagory_products(request):
-    if request.user.is_authenticated:
-        products= Product.objects.filter()
-        return render(request,'admin_products.html',{'products':products})
+# def show_catagory_products(request):
+#     if request.user.is_authenticated:
+#         products= Product.objects.filter()
+#         return render(request,'admin_products.html',{'products':products})
+
+def catagory_items(request,id):
+        catagories = Catagory.objects.all()
+        catagory = Catagory.objects.get(id=id)
+        products= Product.objects.filter(catagory=catagory)
+        context = {'products':products,'catagories':catagories}
+        return render(request,'userpage.html',context)
+
 def add_product(request):
     if request.method=='POST':
         title = request.POST['title']
         description = request.POST['description']
         price = request.POST['price']
         quantity = request.POST['quantity']
-        image = request.FILES.get('image')
+        # image = request.FILES.get('image')
+        image_data = request.POST['pro_img']
+        format , imgstr = image_data.split(';base64,')
+        ext = format.split('/')[-1]
+
+        data = ContentFile(base64.b64decode(imgstr), name='temp.'+ ext)
+
         catagory_id = int(request.POST['catagory_id'])
         catagory = Catagory.objects.get(id=catagory_id)
         if request.user.is_superuser:
@@ -46,7 +62,7 @@ def add_product(request):
             vendor = User.objects.get(id=vendor_id)
         else:    
             vendor= request.user
-        product = Product.objects.create(title=title,catagory=catagory, description=description,price=price,quantity=quantity,image=image,vendor=vendor)
+        product = Product.objects.create(title=title,catagory=catagory, description=description,price=price,quantity=quantity,image=data,vendor=vendor)
         product.save()
         return redirect(show_products)
     else:
@@ -91,7 +107,8 @@ def edit_product(request,id):
 
 def view_product_details(request,id):
     product = Product.objects.get(id=id)
+    catagories = Catagory.objects.all()
     if request.user.is_authenticated:  
-        return render(request,'loggedin_details_view.html',{'product':product})
+        return render(request,'loggedin_details_view.html',{'product':product,'catagories':catagories})
     else:
-        return render(request,'loggedout_details_view.html',{'product':product})
+        return render(request,'loggedin_details_view.html',{'product':product,'catagories':catagories})
