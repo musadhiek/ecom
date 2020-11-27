@@ -3,7 +3,10 @@ from django.contrib.auth import authenticate
 from django.db import models
 from product.models import Product,Catagory
 from .models import OrderItem,Order,ShippingAddress
-import uuid
+import datetime
+import json
+from django.http import JsonResponse
+
 
 # Create your views here.
 
@@ -11,16 +14,18 @@ def show_cart(request):
     if request.user.is_authenticated:
         user =request.user 
         catagories = Catagory.objects.all()
-        items = OrderItem.objects.filter(user=user)
-        orders = Order.objects.filter(user=user)
+        order, created = Order.objects.get_or_create(user=user,order_status=Order.ORDER_NOT_PLACED)
+        items = order.orderitem_set.all()
         count = items.count()
+        
         total = 0
         for item in items:
-            total += item.price
+            total += item.quantity * item.product.price
+            item.item_total_price = item.get_item_total
         if count ==0:
             message = "There is no items in Your cart!" 
             return render(request,'user_cart.html',{'items':items,'message':message})
-        context ={'items':items,'orders':orders,'count':count,'total':total,'catagories':catagories}    
+        context ={'items':items,'count':count,'total':total,'catagories':catagories}    
         return render(request,'user_cart.html',context)
     else:
         return redirect(home)    
@@ -30,19 +35,21 @@ def add_to_cart(request,id):
             
             product = Product.objects.get(id=id)
             user = request.user
-            if OrderItem.objects.filter(product=product).exists():
-                item =OrderItem.objects.get(product=product) 
+            order, created = Order.objects.get_or_create(user=user,order_status=Order.ORDER_NOT_PLACED)
+            if OrderItem.objects.filter(user=user,order=order,product=product).exists():
+                item =OrderItem.objects.get(user=user,order=order,product=product) 
                 if item.quantity <= item.product.quantity:
                     item.quantity = item.quantity+1
-                    item.price = item.quantity*item.product.price
+                    item.item_total_price = item.quantity * item.product.price
                     item.save()
                     return redirect('home')
                 else:
                     return redirect('home')
             else:
 
-                orderitem = OrderItem.objects.create( user=user, product=product,price=product.price)
-                orderitem.save()
+                item = OrderItem.objects.create( user=user,order=order,product=product)
+                item.item_total_price = item.quantity * item.product.price
+                item.save()
                 return redirect('home')
         else:
             return redirect('home')
@@ -50,17 +57,20 @@ def add_to_cart(request,id):
 def delete_cart_item(request,id):
     if request.user.is_authenticated:
         product = Product.objects.get(id=id)
-        item = OrderItem.objects.get(product=product,user=request.user)
+        order= Order.objects.get(user=request.user,order_status=Order.ORDER_NOT_PLACED)
+        item = OrderItem.objects.get(product=product,user=request.user,order=order)
         item.delete()
         return redirect(show_cart)
     else:
         return redirect('home')    
+
 def add_one_quantity(request,id):
     if request.user.is_authenticated:
         product = Product.objects.get(id=id)
-        item = OrderItem.objects.get(product=product,user=request.user)
+        order = Order.objects.get(user=request.user,order_status=Order.ORDER_NOT_PLACED)
+        item = OrderItem.objects.get(product=product,user=request.user,order=order)
         item.quantity +=1
-        item.price = item.product.price * item.quantity
+        item.item_total_price = item.product.price * item.quantity
         item.save()
         return redirect(show_cart)
     else:
@@ -69,10 +79,11 @@ def add_one_quantity(request,id):
 def remove_one_quantity(request,id):
     if request.user.is_authenticated:
         product = Product.objects.get(id=id)
-        item = OrderItem.objects.get(product=product,user=request.user)
+        order = Order.objects.get(user=request.user,order_status=Order.ORDER_NOT_PLACED)
+        item = OrderItem.objects.get(product=product,user=request.user,order=order)
         if item.quantity>1:
             item.quantity -=1
-            item.price = item.product.price * item.quantity
+            item.item_total_price = item.product.price * item.quantity
             item.save()
             return redirect(show_cart)
         else :
@@ -86,51 +97,74 @@ def remove_one_quantity(request,id):
 
 def confirm_purchase(request):
     if request.user.is_authenticated:
-        items = OrderItem.objects.filter(user=request.user)
+        if Order.objects.filter(user=request.user,order_status=Order.ORDER_NOT_PLACED).exists():
+            order = Order.objects.get(user=request.user,order_status=Order.ORDER_NOT_PLACED)
+        else:
+            return redirect(show_cart)    
+        items = order.orderitem_set.all()
         count = items.count()
-        transaction_id = uuid.uuid1()
-        order_total = 0
+        # transaction_id = uuid.uuid1()
+        order.order_total_price = 0
         if ShippingAddress.objects.filter(user=request.user,default_address=True).exists():
             delivery_address =ShippingAddress.objects.get(user=request.user,default_address=True)
-            for item in items:
-                order =Order.objects.create(user = request.user, product=item.product,delivery_address=delivery_address,quantity=item.quantity,transaction_id=transaction_id)
-                order.save()
-                order_total += item.price
-                item.product.quantity = item.product.quantity - item.quantity
+            if count >1:
+                for item in items:
+                    order.order_total_price += item.item_total_price
+                    item.product.quantity = item.product.quantity - item.quantity
+                    
+                    item.product.save()
+            else:
+                item = OrderItem.objects.get(order=order)
+                order.order_total_price = item.item_total_price
+                item.product.quantity = item.product.quantity - item.quantity 
                 item.product.save()
-        
-            context = {'count':count,'delivery_address':delivery_address,'order_total':order_total,'items':items,'order_total':order_total}
+            
+            # order.create_date = datetime.today()
+            
+            order.save()
+            total = order.order_total_price
+            context = {'count':count,'total':total,'delivery_address':delivery_address,'items':items}
             return render(request,'confirm_purchase.html',context)
         else:
             return render(request,'confirm_purchase.html')
     else:
         return redirect('home')
     
-        
-        
-        
-    #     return redirect(order_history)         
-    # else:       
-        
-    # context = {'delivery_address':delivery_address}
-        
-        # else:
-            # return render(request,'confirm_purchase.html')
+def process_order(request):
+    print("process root")
+    if request.method == 'POST':
+    # transaction_id = datetime.datetime.now().timestamp()
+        data = json.loads(request.body)
+        print('hello', data)
 
+        if request.user.is_authenticated:
+            user = request.user
+            order, created = Order.objects.get_or_create(user=user,order_status=Order.ORDER_NOT_PLACED)
+            total = float(data['form']['total'])
+            # order.transaction_id = transaction_id
 
-        
+            if total == order.order_total_price:
+                order.order_status = Order.ORDER_PLACED
+                order.pyment_status = Order.PAID
+                order.save() 
+           
+            return JsonResponse(safe=False)
+    
+            # 
+        else:
+            print('user not logged in')
+            return JsonResponse(safe=False)
+    else:
+        return JsonResponse(safe=False)
 
 def order_history(request):
     if request.user.is_authenticated:
         user =request.user
         catagories = Catagory.objects.all()
-        orders = Order.objects.filter(user=user,complete=True)
+        orders = Order.objects.filter(user=user,order_status=Order.ORDER_PLACED)
         dict = {}
         for order in orders:
-            if not order.transaction_id in dict.keys():
-                dict[order.transaction_id]=[]
-            dict[order.transaction_id].append(order)
-        print(dict)
+            dict[order]=OrderItem.objects.filter(user=request.user,order=order)
         context ={'dict':dict,'catagories':catagories}
         return render(request,'user_order_history.html',context)
     else:
@@ -139,13 +173,10 @@ def order_history(request):
 def admin_order_history(request):
     if request.user.is_authenticated:
         
-        orders = Order.objects.filter(complete=True)
+        orders = Order.objects.filter()
         dict = {}
         for order in orders:
-            if not order.transaction_id in dict.keys():
-                dict[order.transaction_id]=[]
-            dict[order.transaction_id].append(order)
-        print(dict)
+            dict[order.id]= OrderItem.objects.filter(order=order)
         context ={'dict':dict}
         return render(request,'admin_order_history.html',context)
     else:
@@ -153,14 +184,15 @@ def admin_order_history(request):
 
 def admin_order_delete(request,id):
     if request.user.is_authenticated:
-        orders = Order.objects.filter(transaction_id=id)
+        orders = Order.objects.filter(id=id)
         orders.delete()
         return redirect(admin_order_history)
     else:
         return redirect('home')
+
 def vendor_order(request):
     if request.user.is_authenticated:
-        orders_all = Order.objects.filter(complete=True)
+        orders_all = Order.objects.filter(order_status=ORDER_PLACED)
         print(orders_all)
         orders = []
         for order in orders_all:
@@ -211,11 +243,13 @@ def delete_address(request,id):
         return redirect('user_profile')
     else:
         return redirect('home')
+
 def change_address(request):
     if request.user.is_authenticated:
         return redirect('user_profile')
     else:
         return redirect('home')
+
 def make_primary(request,id):
     if request.user.is_authenticated:
         other_address = ShippingAddress.objects.filter(user=request.user)

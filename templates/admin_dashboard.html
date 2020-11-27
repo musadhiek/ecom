@@ -1,150 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<title>MP's Ecommerce</title>
-
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-<head>
-    <title>MP's Ecommerce</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap.min.css">
-    
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap.min.js"></script>
-    
-    <style>
-        body {
-            font-family: "Lato", sans-serif;
-        }
-
-        .sidenav {
-            height: 100%;
-            width: 0;
-            position: fixed;
-            z-index: 1;
-            top: 0;
-            left: 0;
-            background-color: #111;
-            overflow-x: hidden;
-            transition: 0.5s;
-            padding-top: 60px;
-        }
-
-        .sidenav a {
-            padding: 8px 8px 8px 32px;
-            text-decoration: none;
-            font-size: 25px;
-            color: #818181;
-            display: block;
-            transition: 0.3s;
-        }
-
-        .sidenav a:hover {
-            color: #f1f1f1;
-        }
-
-        .sidenav .closebtn {
-            position: absolute;
-            top: 0;
-            right: 25px;
-            font-size: 36px;
-            margin-left: 50px;
-        }
-
-        @media screen and (max-height: 450px) {
-            .sidenav {
-                padding-top: 15px;
-            }
-
-            .sidenav a {
-                font-size: 18px;
-            }
-        }
-    </style>
-</head>
-
-<body>
-    <nav class="navbar navbar-inverse" style="max-width: width auto;">
-        <div id="mySidenav"  class="sidenav">
-            <!-- <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a> -->
-            <a href="{% url 'admin_dashboard' %}">DashBoard</a>
-            <a href="{% url 'admin_page' %}">vendors</a>
-            <a href="{% url 'adminusers' %}">Users</a>
-            <a href="{% url 'show_products' %}">Products</a>
-            <a href="{% url 'admin_order_history' %}">Orders</a>
-        </div>
-    
-        <span style="font-size:30px;cursor:pointer;color: whitesmoke;margin-left: 5rem;" onclick="openNav()"> MP's &#9776; </span>
-    
-        <script>
-            function openNav() {
-                document.getElementById("mySidenav").style.width = "250px";
-            }
-    
-            function closeNav() {
-                document.getElementById("mySidenav").style.width = "0";
-            }
-        </script>
-        <ul class="nav navbar-nav navbar-right" style="max-width: width auto;">
-            <li style="margin-top:10px;">
-                {% block vendor %}
-                
-                {% endblock %}
-                {% block user %}
-                
-                {% endblock %}
-                {% block produts %}
-                
-                {% endblock %}
-            </li>
-            <li style="margin-right: 5rem;"><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
-        </ul>
-    </nav>
+{% extends "adminpage.html" %}
     {% block content %}
-    <table id="example" class="table table-striped table-bordered" style="width:70%;margin-left: 20rem;">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Position</th>
-                <th>Office</th>
-                <th>Age</th>
-                <th>Start date</th>
-                <th>Salary</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Tiger Nixon</td>
-                <td>System Architect</td>
-                <td>Edinburgh</td>
-                <td>61</td>
-                <td>2011/04/25</td>
-                <td>$320,800</td>
-            </tr>
-        </tbody>
-        <tfoot>
-            <tr>
-                <th>Name</th>
-                <th>Position</th>
-                <th>Office</th>
-                <th>Age</th>
-                <th>Start date</th>
-                <th>Salary</th>
-            </tr>
-        </tfoot>
-    </table>
-    {% endblock %}
+    
+    <div class="col-xl-9 col-md-6 mb-6">
+        <canvas id="myChart">Sale</canvas>
+    </div>
+
     <script>
-    $(document).ready(function() {
-        $('#example').DataTable();
-    } );
-</script>
+        var totalorders = '{{order_count}}'
+        var totalproducts = '{{product}}'
+        var totalusers = '{{users}}'
+
+        let myChart = document.getElementById('myChart').getContext('2d');
+
+        // Global Propeties
+        Chart.defaults.global.defaultFontFamily = 'Lato';
+        Chart.defaults.global.defaultFontSize = 19;
+        Chart.defaults.global.defaultFontColor = 'hotpink';
+
+
+        let massPopChart = new Chart(myChart, {
+            type: 'bar',
+            data: {
+                labels: ['Total Orders', 'Total Products', 'Total Users'],
+                datasets: [{
+                    label: 'Numbers',
+                    data: [
+                        
+                        totalorders,
+                        totalproducts,
+                        totalusers,
+                    ],
+                    label: 'Qunantity in Numbers',
+                    backgroundColor: [
+                        'red',
+                        'green',
+                        'blue',
+                    ],
+                    borderWidth: 1,
+                    borderColor: 'red',
+                    hoverBorderWidth: 3,
+                    hoverBorderColor: 'yellow'
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'Monthly Sale Report',
+                    fontSize: 20,
+                    fontColor: 'black'
+                },
+                legend: {
+                    display: true,
+                    position: 'right',
+                    labels: {
+                        fontColor: 'black',
+                    }
+                },
+                layout: {
+                    padding: {
+                        left: 50,
+                        right: 0,
+                        bottom: 0,
+                        top: 0,
+                    }
+                },
+                tooltips: {
+                    mode: 'index',
+                    axis: 'X'
+
+                }
+            }
+        });
+
+
+    </script>
+
+    {% endblock %}
+   
 </body>
+</html>

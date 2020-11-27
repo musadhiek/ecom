@@ -74,6 +74,7 @@ footer a {
     <div class="row">
         <div class="col-12">
             <div class="table-responsive">
+                {% if items %}
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -106,7 +107,7 @@ footer a {
                             <!-- <td><input class="form-control" type="text" value="1" /></td> -->
                             <td class="text-right">
                                 {{item.product.price}}</td>
-                            <td class="text-right">{{item.price}}</td>
+                            <td class="text-right">{{item.item_total_price}}</td>
                            
                             <td ><a href="{% url 'delete_cart_item' item.product.id %}"><button onclick="return confirm('Are you sure to remove')"
                                 class="btn btn-outline-danger  btn-block"  style="width: auto;float:right;">DELETE</button>
@@ -125,6 +126,7 @@ footer a {
                         <td style="text-align: right;" >{{total}}</td>
                     </tr>
                 </table>
+                {% endif %}
             </div>
         </div>
         <div class="col mb-2">

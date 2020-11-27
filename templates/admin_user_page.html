@@ -6,34 +6,73 @@
                 </button>
                 {% endblock %}
 {% block content %}    
+<div class="col-lg-9 col-xs-12 col-sm-9 " style="flex: 2;">
+      <br>
+      <div class="jumbotron">
+            <h2 style="text-align: center;">USERS</h2>
+            <div class="card mb-4" style="max-width: width auto;">
+                  <div class="card-header">
+                        <i class="fas fa-table mr-1"></i>
+                  <h3 style="margin-left: 10rem;"> </h3>
+                  </div>
+                  <div class="card-body" style="margin-left: 10rem;">
+                        <div class="table-responsive">
+                              <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                          <tr>
+                                          <tr>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">Email</th>
+                                                <th scope="col">Edit</th>
+                                                <th scope="col">Delete</th>
+                                                <th scope="col">Block</th>
+                                          </tr>
+                                          </tr>
+                                    </thead>
+                                    <tfoot>
+
+                                    </tfoot>
+                                    <tbody>
+                                          {% for user in users %}
+                                          <tr>
+                                                <!-- <th scope="row"></th> -->
+                                                <td>{{user.username}}</td>
+                                                <td>{{user.email}}</td>
+                                                <td><a href="/edit_user/{{ user.id}}"><button
+                                                                  class="btn btn-success btn-sm btn-block"
+                                                                  style="width: auto;">Edit</button></a></td>
+                                                <td><a href="/delete_user/{{user.id}}"><button
+                                                                  onclick="return confirm(' Are you sure to delete' ) "
+                                                                  class="btn btn-danger btn-sm btn-block"
+                                                                  style="width: auto;">Delete</button></a>
+                                                {% if user.is_active %}                  
+                                                <td><a href="/block_user/{{user.id}}"><button
+                                                      onclick="return confirm(' Are you sure to block the user' ) "
+                                                      class="btn btn-warning btn-sm btn-block"
+                                                      style="width: auto;">Block</button></a>
+                                                </td>
+                                                {% else %}
+                                                <td><a href="/unblock_user/{{user.id}}"><button
+                                                      onclick="return confirm(' Are you sure to unblock the user' ) "
+                                                      class="btn btn-info btn-sm btn-block"
+                                                      style="width: auto;">UnBlock</button></a>
+                                                </td>
+                                                {% endif %}
+                                          </tr>
+
+                                          {% endfor %}
+                                    </tbody>
+                              </table>
+                        </div>
+                  </div>
+            </div>
+      </div>
 <section>
-      <div style="width: 100%;">
-            <h2 style="text-align: center;">USER LIST</h2>
-        <table id="myTable" style="margin-left: 20rem;" class="table table-striped table-dark">
-              <thead>
-                    <tr>
-                          <th scope="col">Name</th>
-                          <th scope="col">Email</th>
-                          <th scope="col">Edit</th>
-                          <th scope="col">Delete</th>
-                    </tr>
-              </thead>  
-              <tbody>
-                    {% for user in users %}
-                    <tr>
-                          <!-- <th scope="row"></th> -->
-                          <td>{{user.username}}</td>
-                          <td>{{user.email}}</td>
-                          <td><a href="/edit_user/{{ user.id}}"><button class="btn btn-success btn-lg btn-block"
-                                            style="width: auto;">Edit</button></a></td>
-                          <td><a href="/delete_user/{{user.id}}"><button onclick="return confirm(' Are you sure to delete' ) "
-                                            class="btn btn-danger btn-lg btn-block" style="width: auto;">Delete</button></a>
-                          </td>
-                    </tr>
-        
-                    {% endfor %}
-              </tbody>
-        </table>
-    </div>
-    </section>
+      
+</div>
+
+</section>
+<link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet"
+crossorigin="anonymous">
 {% endblock %}
+

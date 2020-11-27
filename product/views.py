@@ -30,10 +30,6 @@ def vendor_add_catagory(request):
     else:
         return render(request,'vendor_add_catagory.html')    
 
-# def show_catagory_products(request):
-#     if request.user.is_authenticated:
-#         products= Product.objects.filter()
-#         return render(request,'admin_products.html',{'products':products})
 
 def catagory_items(request,id):
         catagories = Catagory.objects.all()
@@ -41,6 +37,31 @@ def catagory_items(request,id):
         products= Product.objects.filter(catagory=catagory)
         context = {'products':products,'catagories':catagories}
         return render(request,'userpage.html',context)
+
+def show_catagory(request):
+    catagories = Catagory.objects.all()
+    return render(request, "vendor_catagory.html",{'catagories':catagories})
+
+def edit_catagory(request,id):
+    if request.user.is_authenticated and request.method=='POST':
+        name = request.POST['name']
+        catagory = Catagory.objects.get(id=id)
+        catagory.name=name
+        catagory.save()
+
+        return redirect(show_catagory)
+    catagory = Catagory.objects.get(id=id)
+    return render(request, "vendor_add_catagory.html",{'catagory':catagory})
+
+def delete_catagory(request,id):
+    if request.user.is_authenticated:
+        products = Product.objects.filter(vendor=request.user,catagory=id)
+        if products:
+            products.delete()
+        catagories = Catagory.objects.all()
+        return render(request, "vendor_catagory.html",{'catagories':catagories})
+    else:
+        return redirect('home')
 
 def add_product(request):
     if request.method=='POST':

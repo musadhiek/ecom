@@ -2,128 +2,140 @@
 {% block content %}
 <style>
     .bloc_left_price {
-    color: #c01508;
-    text-align: center;
-    font-weight: bold;
-    font-size: 150%;
-}
-.category_block li:hover {
-    background-color: #007bff;
-}
-.category_block li:hover a {
-    color: #ffffff;
-}
-.category_block li a {
-    color: #343a40;
-}
-.add_to_cart_block .price {
-    color: #c01508;
-    text-align: center;
-    font-weight: bold;
-    font-size: 200%;
-    margin-bottom: 0;
-}
-.add_to_cart_block .price_discounted {
-    color: #343a40;
-    text-align: center;
-    text-decoration: line-through;
-    font-size: 140%;
-}
-.product_rassurance {
-    padding: 10px;
-    margin-top: 15px;
-    background: #ffffff;
-    border: 1px solid #6c757d;
-    color: #6c757d;
-}
-.product_rassurance .list-inline {
-    margin-bottom: 0;
-    text-transform: uppercase;
-    text-align: center;
-}
-.product_rassurance .list-inline li:hover {
-    color: #343a40;
-}
-.reviews_product .fa-star {
-    color: gold;
-}
-.pagination {
-    margin-top: 20px;
-}
-footer {
-    background: #343a40;
-    padding: 40px;
-}
-footer a {
-    color: #f8f9fa!important
-}
+        color: #c01508;
+        text-align: center;
+        font-weight: bold;
+        font-size: 150%;
+    }
+
+    .category_block li:hover {
+        background-color: #007bff;
+    }
+
+    .category_block li:hover a {
+        color: #ffffff;
+    }
+
+    .category_block li a {
+        color: #343a40;
+    }
+
+    .add_to_cart_block .price {
+        color: #c01508;
+        text-align: center;
+        font-weight: bold;
+        font-size: 200%;
+        margin-bottom: 0;
+    }
+
+    .add_to_cart_block .price_discounted {
+        color: #343a40;
+        text-align: center;
+        text-decoration: line-through;
+        font-size: 140%;
+    }
+
+    .product_rassurance {
+        padding: 10px;
+        margin-top: 15px;
+        background: #ffffff;
+        border: 1px solid #6c757d;
+        color: #6c757d;
+    }
+
+    .product_rassurance .list-inline {
+        margin-bottom: 0;
+        text-transform: uppercase;
+        text-align: center;
+    }
+
+    .product_rassurance .list-inline li:hover {
+        color: #343a40;
+    }
+
+    .reviews_product .fa-star {
+        color: gold;
+    }
+
+    .pagination {
+        margin-top: 20px;
+    }
+
+    footer {
+        background: #343a40;
+        padding: 40px;
+    }
+
+    footer a {
+        color: #f8f9fa !important
+    }
 </style>
 
 <section class="jumbotron text-center">
     <div class="container">
         <h1 class="jumbotron-heading">Order History</h1>
+        <div class="container mb-4">
+            <div class="row">
         
-     </div>
-</section>
-
-<div class="container mb-4">
-    <div class="row">
+                <div class="col-9">
+                    <div class="table-responsive">
         
-        <div class="col-12">
-            <div class="table-responsive">
-                
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <!-- <th scope="col"> Order id</th> -->
-                            <th scope="col"> user</th>
-                            <!-- <th scope="col"> Image</th> -->
-                            <th scope="col">Product</th>
-                            <!-- <th scope="col">Available</th> -->
-                            <th scope="col" class="text-center">Quantity</th>
-                            <th scope="col" class="text-right">Unit Price</th>
-                            <th scope="col" class="text-right"> Total Price</th>
-                            <th scope="col" class="text-right">Ordered</th>
-                            <th scope="col" class="text-right">Delivered</th>
-                            <th scope="col" class="text-right">Cancel</th>
-                        </tr>
-                    </thead>
-                    <tbody>{% for transaction_id, orders in dict.items %}
-                        <tr>
-                            <th scope="col"> transcation Id</th>
-                            <th scope="col"><h>{{transaction_id}}</h></th>
-                            <th colspan="6"><a href="{% url 'admin_order_delete' transaction_id %}"><button onclick="return confirm('Are you sure to remove')"
-                                class="btn btn-outline-danger  btn-block"  style="width: auto;float:right;">DELETE</button>
-                             </a> </th>      
-                        </tr>
-                    
-                            {% for order in orders %}
+                        <table class="table table-striped">
+                            <thead>
                                 <tr>
-                                    <td>{{order.user.username}}</td>
-                                    <!-- <td><img src="{{ order.product.ImageURL}}"class="img-responsive" style="height: 7rem;" /> </td> -->
-                                    <td>{{order.product.title}}</td>
-                                    <!-- <td>In stock</td> -->
-                                    <td style="text-align: right;">{{order.quantity}}</td>
-                                    <!-- <td><input class="form-control" type="text" value="1" /></td> -->
-                                    <td class="text-right">{{order.product.price}}</td>
-                                    <td class="text-right">{{order.orderitem.price}}</td>
-                                    <!-- <td class="text-right"><button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button> </td> -->
-                                    <td class="text-right">{{order.complete}}</td>
-                                    <td class="text-right">{{order.delivered}}</td>    
+                                    <!-- <th scope="col"> Order id</th> -->
+                                    <th scope="col"> user</th>
+                                    <!-- <th scope="col"> Image</th> -->
+                                    <th scope="col">Product</th>
+                                    <!-- <th scope="col">Available</th> -->
+                                    <th scope="col" class="text-center">Quantity</th>
+                                    <th scope="col" class="text-right">Unit Price</th>
+                                    <th scope="col" class="text-right"> Total Price</th>
+                                    <th scope="col" class="text-right">Ordered</th>
+                                    <th scope="col" class="text-right">Payment</th>
+                                    <th scope="col" class="text-right">Delivered</th>
+                                    <th scope="col" class="text-right">Cancel</th>
                                 </tr>
+                            </thead>
+                            <tbody>
+                                {% for order ,orderitem in dict.items %}
                                 <tr>
+                                    <th scope="col"> transcation Id</th>
+                                    <th scope="col">
+                                        <h>{{order.id}}</h>
+                                    </th>
+                                    <th scope="col"> User</th>
+                                    <td>{{order.user.username}}</td>
                                     
-                                </tr>                                
-                                
-                        
-                            {% endfor %}
-                            {% endfor %}
-                    </tbody>
-                </table>
+                                </tr>
+        
+                                {% for item in orderitem %}
+                                <tr>
+                                    <!-- <td><img src="{{ order.product.ImageURL}}"class="img-responsive" style="height: 7rem;" /> </td> -->
+                                    <td>{{item.product.title}}</td>
+                                    <!-- <td>In stock</td> -->
+                                    <td style="text-align: right;">{{item.quantity}}</td>
+                                    <!-- <td><input class="form-control" type="text" value="1" /></td> -->
+                                    <td class="text-right">{{item.product.price}}</td>
+                                    <td class="text-right">{{orderitem.item_total_price}}</td>
+                                    <!-- <td class="text-right"><button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button> </td> -->
+                                    <td class="text-right">{{item.complete}}</td>
+                                    <td class="text-right">{{item.complete}}</td>
+                                    <td class="text-right">{{item.delivered}}</td>
+                                </tr>
+        
+                                {% endfor %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+        
             </div>
         </div>
-       
     </div>
-</div>
+</section>
+
+
 
 {% endblock %}

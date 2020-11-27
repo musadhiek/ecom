@@ -21,7 +21,18 @@
 
         <li><a href="{% url 'show_products'%}">Products</a></li>
         <li><a href="{% url 'vendor_order' %}">Orders</a></li>
-        <li><a href="{% url 'vendor_add_catagory' %}">ADD Catagory</a></li>
+        <a class="nav navbar-nav dropdown-toggle" style="float: right;margin-top: 1.5rem;color: whitesmoke;" data-toggle="dropdown"
+          href="#">Catagory Management
+          <span class="caret"></span></a>
+        <ul class="dropdown-menu" style="margin-left: 23%;">
+          <li><a class="dropdown-item" href="{% url 'show_catagory' %}">
+              <p>Show Catagories</p>
+            </a></li>
+          <li><a class="dropdown-item" href="{% url 'vendor_add_catagory' %}">
+              <p>Add New Catagory</p>
+            </a></li>
+        </ul>
+
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li style="margin-top: 1rem;"><button class="btn btn-outline-success my-2 my-sm-0 " type="submit">

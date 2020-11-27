@@ -1,11 +1,19 @@
 {% extends "add.html" %}
 {% block content %}
-<form method="POST"  enctype="multipart/form-data">
+<form method="POST">
 	{% csrf_token %}
 <fieldset>
+	{% if catagory %}
+	<p class="text-uppercase pull-center"> Edit Catagory</p>
+	<div class="form-group">
+		<input type="text" name="name" id="name" class="form-control input-lg" value="{{catagory}}" required="required">
+	</div>
+	
+	<div>
+		<input type="submit" class="btn btn-lg btn-primary"   value="Update">
+	</div>
+	{% else %}
 	<p class="text-uppercase pull-center"> Add New Catagory</p>
-	
-	
 	<div class="form-group">
 		<input type="text" name="name" id="name" class="form-control input-lg" required="required" placeholder="name">
 	</div>
@@ -13,6 +21,7 @@
 	<div>
 		<input type="submit" class="btn btn-lg btn-primary   value=" Add">
 	</div>
+	{% endif %}
 </fieldset>
 </form>
 {% endblock %}

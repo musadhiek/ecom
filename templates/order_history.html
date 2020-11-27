@@ -73,33 +73,37 @@ footer a {
                 
                 <table class="table table-striped">
                     <thead>
-                        <tr>
-                            <th scope="col"> Image</th>
-                            <th scope="col">Product</th>
-                            <!-- <th scope="col">Available</th> -->
-                            <th scope="col" class="text-center">Quantity</th>
-                            <th scope="col" class="text-right">Price</th>
-                        </tr>
+                        
                     </thead>
                     <tbody>
-                        {% for transaction_id, orders in dict.items %}
+                        {% for order,orderitem in dict.items %}
+                            <thead>
                             <tr>
                                 <th scope="col"> transcation Id</th>
-                                <th scope="col"><h>{{transaction_id}}</h></th>      
+                                <th scope="col"style="text-align: right;"><h>Total</h></th>
+                                <th scope="col"style="text-align: right;"><h>Order Status</h></th>
+                                <th scope="col"style="text-align: right;"><h>Payment Status</h></th>
+                                <th scope="col"style="text-align: right;"><h>Delivery Status</h></th>
                             </tr>
-                            {% for order in orders %}
+                            <tr>
+                                <td scope="col"><h>{{order.id}}</h></td>
+                                <td scope="col" style="text-align: right;" ><h4>${{order.order_total_price}}</h4></td>
+                                <td scope="col"style="text-align: right;" ><h>{{order.get_order_status_display}}</h></td>
+                                <td scope="col"style="text-align: right;" ><h>{{order.get_payment_status_display}}</h></td>
+                                <td scope="col"style="text-align: right;" ><h>{{order.get_delivery_status_display}}</h></td>           
+                            </tr>
+                        </thead>    
+                            
+                                {% for item in orderitem %}
                                 <tr>
-                                    <td><img src="{{ order.product.ImageURL}}"class="img-responsive" style="height: 7rem;" /> </td>
-                                    <td>{{order.product.title}}</td>
-                                    <!-- <td>In stock</td> -->
-                                    <td>{{order.quantity}}</td>
-                                    <!-- <td><input class="form-control" type="text" value="1" /></td> -->
-                                    <td class="text-right">{{order.product.price}}</td>
-                                    <!-- <td class="text-right"><button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button> </td> -->
+                                    <th><img src="{{ item.product.ImageURL}}"class="img-responsive" style="height: 7rem;" /> </td>
+                                    <th scope="col">Product : {{item.product.title}}</th>
+                                    <th scope="col" class="text-center">Quantity : {{item.quantity}}</th>
+                                    <th scope="col" class="text-right">Unit Price : ${{item.product.price}}</th>
+                                    <th scope="col" class="text-right">Item Total Price : ${{item.item_total_price}}</th>
                                 </tr>
+                                {% endfor %}
                                 
-                        
-                            {% endfor %}
                         {% endfor %}
                     </tbody>
                 </table>
@@ -112,9 +116,9 @@ footer a {
                     <a href="{% url 'home' %}" class="btn btn-block btn-light">Continue Shopping
                     </a></div>
             
-                <div class="col-sm-12 col-md-6 text-right">
+                <!-- <div class="col-sm-12 col-md-6 text-right">
                    <a href="{% url 'confirm_purchase' %}" class="btn btn-lg btn-block btn-success text-uppercase">Checkout
-                   </a></div>
+                   </a></div> -->
             </div>
             
         </div>

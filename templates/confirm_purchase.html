@@ -81,6 +81,15 @@
               </div>
               <!--Grid row-->
               <div class="row">
+                
+                <!-- <div class="box-element hidden" id="payment-info">
+                  <small>Payment Options</small>
+                  <select id="payment_status" name="payment_status">
+                      <option value="cod">COD</option>
+                      <option value="paypal">Paypal</option>
+                      <option value="razorpay">Razorpay</option>
+                  </select> -->
+                
               <!-- </div>clastn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button> --> 
               <div id="paypal-button-container"></div>
 
@@ -96,7 +105,7 @@
                           return actions.order.create({
                               purchase_units: [{
                                   amount: {
-                                      value: '{{order_total}}'
+                                      value: '{{total | floatformat:2}}'
                                   }
                               }]
                           });
@@ -105,17 +114,20 @@
                       // Finalize the transaction
                       onApprove: function(data, actions) {
                           return actions.order.capture().then(function(details) {
+                            submitFormData()
                               // Show a success message to the buyer
                               alert('Transaction completed by ' + details.payer.name.given_name + '!');
+                              // window.location.href = "{% url 'home' %}"
                           });
                       }
           
           
                   }).render('#paypal-button-container');
               </script>
-            </form>
+              </form>
+            
   {% else %}
-  <form class="form-horizontal">
+  <form class="form-horizontal" id="form">
     <!--Main layout-->
     <main class="mt-5 pt-4">
       <div class="container wow fadeIn">
@@ -166,7 +178,7 @@
             
             <li class="list-group-item d-flex justify-content-between">
               <span>Total (US)</span>
-              <strong>${{order_total}}</strong>
+              <strong>${{total}}</strong>
             </li>
           </ul>
           <!-- Cart -->
@@ -189,6 +201,62 @@
       <!--Grid row-->
 
     </div>
+    <script type="text/javascript">
+      // var shipping = '{{order.shipping}}'
+      var total = '{{total|floatformat:2}}'
+  
+      var form = document.getElementById('form')
+  
+      // form.addEventListener('submit', function (e) {
+      //     e.preventDefault()
+      //     console.log('formsubmitted..')
+      //     document.getElementById('form-button').classList.add('hidden')
+      //     document.getElementById('payment-info').classList.remove('hidden')
+      // })
+  
+      // document.getElementById('make-payment').addEventListener('click', function (e) {
+      //     submitFormData()
+      // })
+  
+      function submitFormData() {
+          console.log('paymentbuttonclked')
+  
+          var userFormData = {
+              'name': null,
+              'email': null,
+              'total': total,
+                
+              }
+          
+  
+       
+  
+          var url = 'http://127.0.0.1:8000/process_order'
+  
+          fetch(url, {
+              method: 'POST',
+              headers: {
+                'X-CSRFToken': '{{csrf_token}}',
+                'Content-Type': 'application/json',
+  
+              },
+              body: JSON.stringify({ 'form': userFormData})
+  
+          })
+  
+              .then((response) => response.json())
+              
+                  
+              alert('Transaction Completed')
+              window.location.href = "{% url 'home' %}"
+                  
+      
+              
+  
+      }
+  
+  </script>
+  
   </main>
   <!--Main layout-->
 

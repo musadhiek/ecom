@@ -1,0 +1,29 @@
+{% extends "vendor.html"%}
+
+{% block vendor %}
+
+<table id="myTable" class="table table-striped table-dark" style="margin-left: 5rem;">
+      <thead>
+            <tr>
+                  <!-- <th scope="col">Vendor</th> -->
+                  
+                  <th scope="col">Name</th>
+                  
+                  <th scope="col">Edit</th>
+                  <th scope="col">Delete</th>
+            </tr>
+      </thead>
+
+      {% for catagory in catagories %}
+      <tr>
+            
+            <td>{{catagory.name}}</td>
+            <td><a href="/edit_catagory/{{ catagory.id}}"><button class="btn btn-success btn-lg btn-block"
+                              style="width: auto;">Edit</button></a></td>
+            <td><a href="/delete_catagory/{{catagory.id}}"><button onclick="return confirm(' Are you sure to delete' ) "
+                              class="btn btn-danger btn-lg btn-block" style="width: auto;">Delete</button></a></td>
+      </tr>
+
+      {% endfor %}
+</table>
+{% endblock%}

@@ -6,8 +6,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/2.3.3/cropper.css"/>  
+  <link rel="icon" href="images/icon.png" type="image/x-icon" />
+  <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
 </head>
 
 <body>
@@ -20,18 +21,21 @@
       <ul class="nav navbar-nav navbar-left">
         <li><a href="{% url 'home' %}">Home</a></li>
         <li><a href="{% url 'order_history' %}">Order</a></li>
-        <div class="dropdown" style="float: right;margin-top: 1rem;">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Catagories
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        
+        <a class="dropdown-toggle" style="float: right;margin-top: 1.5rem;color: whitesmoke;" data-toggle="dropdown" href="#">Catagories
+          <span class="caret"></span></a>
+          <ul class="dropdown-menu"    style="margin-left: 23rem;" >
+            
+            <li><a class="dropdown-item" href="{% url 'home' %}">
+              <p>All items</p>
+          </a></li>
             {% for catagory in catagories %}
-              <a class="dropdown-item" href="{% url 'catagory_items' catagory.id %}">
+              <li><a class="dropdown-item" href="{% url 'catagory_items' catagory.id %}">
                   <p>{{catagory.name}}</p>
-              </a>
+              </a></li>
             {% endfor %}
-          </div>
-        </div>
+            
+          </ul>
       </ul>
       {% if request.user.is_authenticated %}
         <ul class="nav navbar-nav navbar-right float-right">
