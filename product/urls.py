@@ -3,7 +3,7 @@ from product import views
 
 urlpatterns=[
     path('add_product',views.add_product,name='add_product'),
-    path('vendor_add_catagory',views.vendor_add_catagory,name='vendor_add_catagory'),
+    path('add_catagory',views.add_catagory,name='add_catagory'),
     path('show_catagory',views.show_catagory,name='show_catagory'),
     path('edit_catagory/<int:id>',views.edit_catagory,name='edit_catagory'),
     path('delete_catagory/<int:id>',views.delete_catagory,name='delete_catagory'),

@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 class UserProfile(models.Model):
 
     name = models.CharField(max_length=100,blank=True,null=True)
+    mobile = models.CharField(max_length=15,null=True,blank=True)
     profile_picture = models.ImageField(blank=True,null=True)
     user = models.ForeignKey(User,on_delete=models.CASCADE,blank=True,null=True)
     occupation = models.CharField(max_length=100,blank=True,null=True)

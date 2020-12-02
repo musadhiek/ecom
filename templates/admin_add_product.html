@@ -5,13 +5,12 @@
 <fieldset>
 	<p class="text-uppercase pull-center"> Add New Product</p>
 	<div class="form-group">
-		<select name="vendor_id">
-			{% for vendor in user %}
-			<option value="{{vendor.id}}"  >{{vendor.username}}</option>
+		<select name="catagory_id">
+			{% for catagory in catagories %}
+			<option value="{{catagory.id}}"  >{{catagory.name}}</option>
 			{% endfor %}
 		</select>
-
-	</div>
+	 </div>
 	<div class="form-group">
 		<input type="text" name="title" id="title" class="form-control input-lg" placeholder="title" required="required"
 	</div>

@@ -19,7 +19,7 @@ class Product(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True,auto_now=False)
     updated = models.DateTimeField(auto_now_add=False,auto_now=True)
     active = models.BooleanField(default=True)
-    vendor= models.ForeignKey(User, on_delete=models.CASCADE, null=True,blank=True)
+    # vendor= models.ForeignKey(User, on_delete=models.CASCADE, null=True,blank=True)
     image = models.ImageField(null=True,blank=True)
 
     @property

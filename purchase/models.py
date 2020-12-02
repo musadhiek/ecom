@@ -43,10 +43,10 @@ class Order(models.Model):
     delivery_status = models.IntegerField(choices=DELIVERY_CHOICES,default=ORDER_ACCEPTED)
     # transaction_id = models.CharField(max_length=200,null=True)
     order_total_price = models.DecimalField(decimal_places=2,max_digits=20,null=True,blank=True)
-    
+    payment_mode = models.CharField(max_length=50,null=True,blank=True)
     delivery_address = models.ForeignKey(ShippingAddress,on_delete=models.SET_NULL,blank=True,null=True)
-    create_date = models.DateField(auto_now_add=True,null=True,blank=True)
-    delivery_date = models.DateField(null=True,blank=True)
+    create_date = models.DateField(auto_now_add=False,null=True,blank=True)
+    delivery_date = models.DateField(auto_now_add=False,null=True,blank=True)
    
     def __str__(self):
         return str(self.id)

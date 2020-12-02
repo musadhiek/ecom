@@ -65,7 +65,7 @@ footer a {
      </div>
 </section>
 
-<div class="container mb-4">
+<div class=" jumbotron container mb-4" style="max-width: 80vmax;">
     <div class="row">
         
         <div class="col-12">
@@ -74,26 +74,30 @@ footer a {
                 <table class="table table-striped">
                     <thead>
                         
-                    </thead>
-                    <tbody>
-                        {% for order,orderitem in dict.items %}
-                            <thead>
                             <tr>
                                 <th scope="col"> transcation Id</th>
                                 <th scope="col"style="text-align: right;"><h>Total</h></th>
                                 <th scope="col"style="text-align: right;"><h>Order Status</h></th>
                                 <th scope="col"style="text-align: right;"><h>Payment Status</h></th>
                                 <th scope="col"style="text-align: right;"><h>Delivery Status</h></th>
+                                <th scope="col"style="text-align: right;"><h>payment Mode</h></th>
+
                             </tr>
-                            <tr>
-                                <td scope="col"><h>{{order.id}}</h></td>
-                                <td scope="col" style="text-align: right;" ><h4>${{order.order_total_price}}</h4></td>
-                                <td scope="col"style="text-align: right;" ><h>{{order.get_order_status_display}}</h></td>
-                                <td scope="col"style="text-align: right;" ><h>{{order.get_payment_status_display}}</h></td>
-                                <td scope="col"style="text-align: right;" ><h>{{order.get_delivery_status_display}}</h></td>           
-                            </tr>
-                        </thead>    
                             
+                     
+                    </thead>
+                    <tbody>
+                        {% for order,orderitem in dict.items %}
+                              
+                        <tr>
+                            <td scope="col"><h>{{order.id}}</h></td>
+                            <td scope="col" style="text-align: right;" ><h4>${{order.order_total_price}}</h4></td>
+                            <td scope="col"style="text-align: right;" ><h>{{order.get_order_status_display}}</h></td>
+                            <td scope="col"style="text-align: right;" ><h>{{order.get_payment_status_display}}</h></td>
+                            <td scope="col"style="text-align: right;" ><h>{{order.get_delivery_status_display}}</h></td>           
+                            <td scope="col"style="text-align: right;" ><h>{{order.payment_mode}}</h></td>           
+                            
+                        </tr>
                                 {% for item in orderitem %}
                                 <tr>
                                     <th><img src="{{ item.product.ImageURL}}"class="img-responsive" style="height: 7rem;" /> </td>

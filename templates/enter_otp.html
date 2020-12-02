@@ -1,0 +1,36 @@
+{% extends "add.html" %}
+
+{% block content %}
+<form method="POST">
+	{% csrf_token %}
+	<fieldset>
+		{% block user %}
+
+		{% endblock %}
+		<div class="form-group">
+			<input type="text" name="otp" id="otp" class="form-control input-lg" placeholder="enter your otp">
+		</div>
+		{% for message in messages %}
+		<h5 style="color: red;">{{message}}</h5>
+		{% endfor %}
+		
+		
+		<div>
+			<input type="submit" class="btn btn-md" value="Verify">
+		</div>
+		{% block user_signup %}
+		<!-- <div class="text-center">
+		<a class='nav-link' href="{% url 'user_signup' %}">
+			Don't have an account
+		</a>
+	</div> -->
+		{% endblock %}
+		<div class="text-center">
+			<a class='nav-link' href="{% url 'user_login' %}">
+				Already have an account
+			</a>
+		</div>
+	</fieldset>
+</form>
+
+{% endblock %}

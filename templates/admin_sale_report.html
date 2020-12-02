@@ -1,0 +1,51 @@
+{% extends "adminpage.html" %}
+    {% block content %}
+    
+   
+    
+        <div class="table-responsive" style="width:90%;margin-left: 10rem;">
+            <form method="POST" action="admin_sale_report">
+                  {% csrf_token %}
+              <div style="margin-top: 5rem;" >
+                    <label for="start_date">Start Date:</label>
+                    <input type="date" id="start_date" name="start_date">
+                    <span></span>
+                    <label for="end_date">End Date:</label>
+                    <input type="date" id="end_date" name="end_date">
+                    <input type="submit" class="btn btn-sm btn-primary   value=" Create">
+              </div>
+              </form>
+              <br>
+              <h3>Sales Reoprt</h3>
+              <table class="table table-bordered" id="dataTable" style="width: 75vw;" cellspacing="0">
+                    <thead>
+                          <tr>
+                          <tr>
+                                <th scope="col">Date</th>
+                                 <th scope="col">Total Users</th>
+                                <th scope="col">Total Order</th> 
+                                <th scope="col">$ Total Sale</th>
+                                
+                          </tr>
+                          </tr>
+                    </thead>
+                    
+                    <tbody>
+                              {% for item in data %}
+                          <tr>
+                                <td>{{item.create_date}}</td>
+                                <td>{{item.user_count}}</td>
+                                <td>{{item.total_order}}</td>
+                               
+                                <td>{{item.amount}}</td>
+                          </tr>
+                          {% endfor %}
+                    </tbody>
+              </table>
+        </div>
+  
+
+    {% endblock %}
+
+</body>
+</html>

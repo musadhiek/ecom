@@ -1,0 +1,275 @@
+{% extends "loggedin_head.html" %}
+{% block page %}
+<div class="container">
+  {% if delivery_address %}
+    <form class="form-horizontal">
+  <!--Main layout-->
+  <main class="mt-5 pt-4">
+    <div class="container wow fadeIn">
+
+      <!-- Heading -->
+      <h2 class="my-5 h2" style="margin-left: 20rem;">Checkout form</h2>
+
+      <!--Grid row-->
+      <div class="row">
+        <form>
+          <div class="col-md-7">
+            <a href="{% url 'change_address' %}">
+                  <button type="button" class="btn btn-primary" style="float: right;">Change Address</button>
+                </a> 
+              </div> 
+            </form>
+        <!--Grid column-->
+        <div class="col-md-8 mb-4">
+
+          <!--Card-->
+          <div class="card">
+
+            <!--Card content-->
+            <form class="card-body">
+
+              
+            
+
+              </div>
+              <!--Grid row-->
+
+              <!--Username-->
+              <div class="row">
+                <div class="col-sm-3">
+                  <h4 class="mb-0">Phone</h4>
+                </div>
+                <div class="col-sm-9 text-secondary" style="margin-top: .6rem;">
+                  <h4>{{delivery_address.phone}}</h4>
+                </div>
+              </div>
+
+              <!--address-->
+              <div class="row">
+                <div class="col-sm-3">
+                  <h4 class="mb-0">Address</h4>
+                </div>
+                <div class="col-sm-9 text-secondary" style="margin-top: .6rem;">
+                  <h4>{{delivery_address.address}}</h4>
+                </div>
+              </div>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h4 class="mb-0">City</h4>
+                  </div>
+                  <div class="col-sm-9 text-secondary" style="margin-top: .6rem;">
+                    <h4>{{delivery_address.city}}</h4>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h4 class="mb-0">State</h4>
+                  </div>
+                  <div class="col-sm-9 text-secondary" style="margin-top: .6rem;">
+                    <h4>{{delivery_address.state}}</h4>
+                  </div>
+                </div>
+              
+             
+              <div class="row">
+                <div class="col-sm-3">
+                  <h4 class="mb-0">Postal code</h4>
+                </div>
+                <div class="col-sm-9 text-secondary" style="margin-top: .6rem;">
+                  <h4>{{delivery_address.pincode}}</h4>
+                </div>
+              </div>
+              <!--Grid row-->
+              <div class="row">
+                
+                <!-- <div class="box-element hidden" id="payment-info">
+                  <small>Payment Options</small>
+                  <select id="payment_status" name="payment_status">
+                      <option value="cod">COD</option>
+                      <option value="paypal">Paypal</option>
+                      <option value="razorpay">Razorpay</option>
+                  </select> -->
+                
+              <!-- </div>clastn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button> --> 
+              <div id="paypal-button-container"></div>
+
+              <!-- Include the PayPal JavaScript SDK -->
+              <script src="https://www.paypal.com/sdk/js?client-id=AdttXaZLfgdm8IoqHTj6x-W5upG07TN-fDKsnoDder-Hxif4nrpIY95ymI5kiNaIa_j9iiHjKoUN3Ai-&currency=USD"></script>
+          
+              <script>
+                  // Render the PayPal button into #paypal-button-container
+                  paypal.Buttons({
+          
+                      // Set up the transaction
+                      createOrder: function(data, actions) {
+                          return actions.order.create({
+                              purchase_units: [{
+                                  amount: {
+                                      value: '{{total | floatformat:2}}'
+                                  }
+                              }]
+                          });
+                      },
+          
+                      // Finalize the transaction
+                      onApprove: function(data, actions) {
+                          return actions.order.capture().then(function(details) {
+                            submitFormData()
+                              // Show a success message to the buyer
+                              alert('Transaction completed by ' + details.payer.name.given_name + '!');
+                              // window.location.href = "{% url 'home' %}"
+                          });
+                      }
+          
+          
+                  }).render('#paypal-button-container');
+              </script>
+              </form>
+            
+  {% else %}
+  <form class="form-horizontal" id="form">
+    <!--Main layout-->
+    <main class="mt-5 pt-4">
+      <div class="container wow fadeIn">
+        <!-- Heading -->
+        <h2 class="my-5 h2 text-center">Checkout form</h2>
+        <!--Grid row-->
+        <div class="row">
+          <!--Grid column-->
+          <div class="col-md-8 mb-4">
+            <!--Card-->
+            <div class="card">
+             <!--Card content-->
+              <!-- <form class="card-body"> -->
+                <form>
+                <div class="col-md-6">
+                  <a href="{% url 'add_shipping_address'  %}"><button type="button" class="btn btn-primary" style="float: right;">Add Delivery Address</button>
+                  </a>    
+                </div>
+              </form>
+              <!-- </form> -->
+  {% endif %}
+          </div>
+          <!--/.Card-->
+
+        </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+        <div class="col-md-4 mb-4">
+
+          <!-- Heading -->
+          <h4 class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-muted">Your cart</span>
+            <span class="badge badge-secondary badge-pill">{{count}}</span>
+          </h4>
+
+          <!-- Cart -->
+          <ul class="list-group mb-3 z-depth-1">
+            {% for item in items %}
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div>
+                <h6 class="my-0">{{item.product.title}}</h6>
+                <small class="text-muted">{{item.product.description}}</small>
+              </div>
+              <span class="text-muted">{{item.price}}</span>
+            </li>
+            {% endfor %}
+            
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Total (US)</span>
+              <strong>${{total}}</strong>
+            </li>
+          </ul>
+          <!-- Cart -->
+
+          <!-- Promo code -->
+          <form class="card p-2">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Promo code" aria-label="Recipient's username" aria-describedby="basic-addon2">
+              <div class="input-group-append">
+                <button class="btn btn-secondary btn-md waves-effect m-0" type="button">Redeem</button>
+              </div>
+            </div>
+          </form>
+          <!-- Promo code -->
+
+        </div>
+        <!--Grid column-->
+
+      </div>
+      <!--Grid row-->
+
+    </div>
+    <script type="text/javascript">
+      // var shipping = '{{order.shipping}}'
+      var total = '{{total|floatformat:2}}'
+  
+      var form = document.getElementById('form')
+  
+      // form.addEventListener('submit', function (e) {
+      //     e.preventDefault()
+      //     console.log('formsubmitted..')
+      //     document.getElementById('form-button').classList.add('hidden')
+      //     document.getElementById('payment-info').classList.remove('hidden')
+      // })
+  
+      // document.getElementById('make-payment').addEventListener('click', function (e) {
+      //     submitFormData()
+      // })
+  
+      function submitFormData() {
+          console.log('paymentbuttonclked')
+  
+          var userFormData = {
+              'name': null,
+              'email': null,
+              'total': total,
+                
+              }
+          
+  
+       
+  
+          var url = 'http://127.0.0.1:8000/process_order'
+  
+          fetch(url, {
+              method: 'POST',
+              headers: {
+                'X-CSRFToken': '{{csrf_token}}',
+                'Content-Type': 'application/json',
+  
+              },
+              body: JSON.stringify({ 'form': userFormData})
+  
+          })
+  
+              .then((response) => response.json())
+              
+                  
+              alert('Transaction Completed')
+              window.location.href = "{% url 'home' %}"
+                  
+      
+              
+  
+      }
+  
+  </script>
+  
+  </main>
+  <!--Main layout-->
+
+  <!--Footer-->
+  <footer class="page-footer text-center font-small mt-4 wow fadeIn">
+
+    
+
+    <hr class="my-4">
+
+    <!-- Social icons -->
+    
+    
+  </footer>
+  <!--/.Footer-->
+{% endblock %}

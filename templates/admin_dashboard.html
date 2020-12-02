@@ -1,81 +1,177 @@
 {% extends "adminpage.html" %}
-    {% block content %}
-    
-    <div class="col-xl-9 col-md-6 mb-6">
-        <canvas id="myChart">Sale</canvas>
+{% block content %}
+<style>
+    body {
+        margin-top: 40px;
+        background: whitesmoke;
+    }
+
+    .order-card {
+        color: #fff;
+    }
+
+    .bg-c-blue {
+        background: linear-gradient(45deg, #4099ff, #73b4ff);
+    }
+
+    .bg-c-green {
+        background: linear-gradient(45deg, #2ed8b6, #59e0c5);
+    }
+
+    .bg-c-yellow {
+        background: linear-gradient(45deg, #FFB64D, #ffcb80);
+    }
+
+    .bg-c-pink {
+        background: linear-gradient(45deg, #FF5370, #ff869a);
+    }
+
+
+    .card {
+        border-radius: 5px;
+        -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(113, 146, 190, 0.16);
+        box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
+        border: none;
+        margin-bottom: 30px;
+        -webkit-transition: all 0.3s ease-in-out;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .card .card-block {
+        padding: 25px;
+    }
+
+    .order-card i {
+        font-size: 26px;
+    }
+
+    .f-left {
+        float: left;
+    }
+
+    .f-right {
+        float: right;
+    }
+</style>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<div class="container">
+    <div class="row" style="margin-left: 10rem;">
+        <div class="col-md-3 col-xl-3">
+            <div class="card bg-c-blue order-card" style="max-height: 150px;">
+                <div class="card-block">
+                    <h6 class="m-b-20">Orders Received</h6>
+                    <h2 class="text-right"><i class="fa fa-cart-plus f-left"></i><span>{{order_count}}</span></h2>
+                    <!-- <p class="m-b-0">Completed Orders<span class="f-right">351</span></p> -->
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="col-md-3 col-xl-3" style="margin-left: 5rem;">
+            <div class="card bg-c-yellow order-card" style="max-height: 150px;">
+                <div class="card-block">
+                    <h6 class="m-b-20">product Sold</h6>
+                    <h2 class="text-right"><i class="fa fa-refresh f-left"></i><span>{{product_count}}</span></h2>
+                    <!-- <p class="m-b-0">Completed Orders<span class="f-right">351</span></p> -->
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-xl-3" style="margin-left: 5rem;">
+            <div class="card bg-c-pink order-card" style="max-height: 150px;">
+                <div class="card-block">
+                    <h6 class="m-b-20">Sale Amount</h6>
+                    <h2 class="text-right"><i class="fa fa-credit-card f-left"></i><span>${{sale}}</span></h2>
+                    <!-- <p class="m-b-0">Completed Orders<span class="f-right">351</span></p> -->
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-    <script>
-        var totalorders = '{{order_count}}'
-        var totalproducts = '{{product}}'
-        var totalusers = '{{users}}'
+<div class="col-xl-10 col-md-6 mb-6" style="width: 85%;">
+    <canvas id="myChart">Sale</canvas>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+<script>
 
-        let myChart = document.getElementById('myChart').getContext('2d');
+    var totalorders = '{{order_count}}'
+    var totalproducts = '{{product_count}}'
+    var totalusers = '{{user_count}}'
+    var totalsale = '{{sale}}'
 
-        // Global Propeties
-        Chart.defaults.global.defaultFontFamily = 'Lato';
-        Chart.defaults.global.defaultFontSize = 19;
-        Chart.defaults.global.defaultFontColor = 'hotpink';
+    let myChart = document.getElementById('myChart').getContext('2d');
+
+    // Global Propeties
+    Chart.defaults.global.defaultFontFamily = 'Lato';
+    Chart.defaults.global.defaultFontSize = 25;
+    Chart.defaults.global.defaultFontColor = 'hotpink';
 
 
-        let massPopChart = new Chart(myChart, {
-            type: 'bar',
-            data: {
-                labels: ['Total Orders', 'Total Products', 'Total Users'],
-                datasets: [{
-                    label: 'Numbers',
-                    data: [
-                        
-                        totalorders,
-                        totalproducts,
-                        totalusers,
-                    ],
-                    label: 'Qunantity in Numbers',
-                    backgroundColor: [
-                        'red',
-                        'green',
-                        'blue',
-                    ],
-                    borderWidth: 1,
-                    borderColor: 'red',
-                    hoverBorderWidth: 3,
-                    hoverBorderColor: 'yellow'
-                }]
+    let massPopChart = new Chart(myChart, {
+        type: 'doughnut',
+        data: {
+            labels: ['Total Orders', 'Total Products', 'Total Users', 'Total Sale'],
+            datasets: [{
+                label: 'Numbers',
+                data: [
+
+                    totalorders,
+                    totalproducts,
+                    totalusers,
+                    totalsale,
+                ],
+                label: "No's",
+                backgroundColor: [
+                    "rgba(76, 142, 228, 0.16)",
+                    "#4099ff",
+                    "#FF5370",
+                    "#2ed8b6",
+
+
+                ],
+                borderWidth: 1,
+                borderColor: 'black',
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Daily Sale Report',
+                fontSize: 20,
+                fontColor: 'black'
             },
-            options: {
-                title: {
-                    display: true,
-                    text: 'Monthly Sale Report',
-                    fontSize: 20,
-                    fontColor: 'black'
-                },
-                legend: {
-                    display: true,
-                    position: 'right',
-                    labels: {
-                        fontColor: 'black',
-                    }
-                },
-                layout: {
-                    padding: {
-                        left: 50,
-                        right: 0,
-                        bottom: 0,
-                        top: 0,
-                    }
-                },
-                tooltips: {
-                    mode: 'index',
-                    axis: 'X'
-
+            legend: {
+                display: true,
+                position: 'right',
+                labels: {
+                    fontColor: 'black',
                 }
+            },
+            layout: {
+                padding: {
+                    left: 50,
+                    right: 0,
+                    bottom: 0,
+                    top: 0,
+                }
+            },
+            tooltips: {
+                mode: 'index',
+                axis: 'X'
+
             }
-        });
+        }
+    });
 
 
-    </script>
+</script>
 
-    {% endblock %}
-   
+
+
+{% endblock %}
+
 </body>
+
 </html>

@@ -8,13 +8,13 @@
 
 {% block content %}
 
-<div class="jumbotron col-lg-9 col-md-6 col-sm-3" >
+<div class="jumbotron col-lg-7 col-md-6 col-sm-3" style="width: 90%;margin-left: 9rem;" >
       <h2 style="text-align: center;">PRODUCTS</h2>
-      <table id="myTable" style="max-width:80vmax" class="table table-striped table-dark">
+      <table id="myTable"  class="table table-striped table-dark">
             <thead>
                   <tr>
                   <!-- <th scope="col">Vendor</th> -->
-                        <th scope="col">vendor</th>
+                        
                         <th scope="col">Title</th>
                         <th scope="col">Image</th>
                         <th scope="col">Description</th>
@@ -27,16 +27,15 @@
 
             {% for product in products %}
             <tr>
-                  <td>{{product.vendor.username}}</td>
                   <td>{{product.title}}</td>
                   <td ><img style="height: 100px; width: 100px;" src="{{product.ImageURL}}"> </td>
                   <td>{{product.description}}</td>
                   <td>{{product.price}}</td>
                   <td>{{product.quantity}}</td>
-                  <td><a href="/edit_product/{{ product.id}}"><button class="btn btn-success btn-lg btn-block"
+                  <td><a href="/edit_product/{{ product.id}}"><button class="btn btn-success btn-sm btn-block"
                               style="width: auto;">Edit</button></a></td>
                   <td><a href="/delete_product/{{product.id}}"><button onclick="return confirm(' Are you sure to delete' ) "
-                              class="btn btn-danger btn-lg btn-block" style="width: auto;">Delete</button></a></td>
+                              class="btn btn-danger btn-sm btn-block" style="width: auto;">Delete</button></a></td>
             </tr>
 
       {% endfor %}

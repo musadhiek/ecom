@@ -17,18 +17,16 @@ def show_products(request):
         products= Product.objects.all()
         return render(request,'admin_products.html',{'products':products})
     else:
-        id = request.user.id
-        products= Product.objects.filter(vendor_id=id)
-        return render(request,'vendor_products.html',{'products':products})
+        return redirect('home')
 
-def vendor_add_catagory(request):
+def add_catagory(request):
     if request.method=='POST':
         name = request.POST['name']
         catagory = Catagory.objects.create(name=name)
         catagory.save()
         return redirect(show_products)
     else:
-        return render(request,'vendor_add_catagory.html')    
+        return render(request,'add_catagory.html')    
 
 
 def catagory_items(request,id):
@@ -40,7 +38,7 @@ def catagory_items(request,id):
 
 def show_catagory(request):
     catagories = Catagory.objects.all()
-    return render(request, "vendor_catagory.html",{'catagories':catagories})
+    return render(request, "catagory.html",{'catagories':catagories})
 
 def edit_catagory(request,id):
     if request.user.is_authenticated and request.method=='POST':
@@ -51,7 +49,7 @@ def edit_catagory(request,id):
 
         return redirect(show_catagory)
     catagory = Catagory.objects.get(id=id)
-    return render(request, "vendor_add_catagory.html",{'catagory':catagory})
+    return render(request, "add_catagory.html",{'catagory':catagory})
 
 def delete_catagory(request,id):
     if request.user.is_authenticated:
@@ -59,7 +57,7 @@ def delete_catagory(request,id):
         if products:
             products.delete()
         catagories = Catagory.objects.all()
-        return render(request, "vendor_catagory.html",{'catagories':catagories})
+        return render(request, "catagory.html",{'catagories':catagories})
     else:
         return redirect('home')
 
@@ -78,12 +76,9 @@ def add_product(request):
 
         catagory_id = int(request.POST['catagory_id'])
         catagory = Catagory.objects.get(id=catagory_id)
-        if request.user.is_superuser:
-            vendor_id = int(request.POST['vendor_id'])
-            vendor = User.objects.get(id=vendor_id)
-        else:    
-            vendor= request.user
-        product = Product.objects.create(title=title,catagory=catagory, description=description,price=price,quantity=quantity,image=data,vendor=vendor)
+        
+        
+        product = Product.objects.create(title=title,catagory=catagory, description=description,price=price,quantity=quantity,image=data)
         product.save()
         return redirect(show_products)
     else:
@@ -91,8 +86,7 @@ def add_product(request):
             user = User.objects.filter(is_staff=True,is_superuser=False)
             return render(request,'admin_add_product.html',{'user':user})
         else:
-            catagories = Catagory.objects.all()
-            return render(request,'vendor_add_product.html',{'catagories':catagories})   
+            return redirect('home')
 
 def delete_product(request,id):
     product= Product.objects.get(id=id)

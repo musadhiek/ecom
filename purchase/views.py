@@ -6,7 +6,7 @@ from .models import OrderItem,Order,ShippingAddress
 import datetime
 import json
 from django.http import JsonResponse
-
+import razorpay
 
 # Create your views here.
 
@@ -97,13 +97,20 @@ def remove_one_quantity(request,id):
 
 def confirm_purchase(request):
     if request.user.is_authenticated:
-        if Order.objects.filter(user=request.user,order_status=Order.ORDER_NOT_PLACED).exists():
-            order = Order.objects.get(user=request.user,order_status=Order.ORDER_NOT_PLACED)
-        else:
-            return redirect(show_cart)    
+        order, create = Order.objects.get_or_create(user=request.user,order_status=Order.ORDER_NOT_PLACED)
+        if request.method == 'POST' :
+            payment_mode = request.POST['payment']
+            if payment_mode == 'COD':
+                order.order_status = Order.ORDER_PLACED
+                order.payment_mode = 'COD'
+                order.create_date=datetime.date.today()
+                order.save()
+                return JsonResponse('Order Placed',safe=False)
+            
+        
+           
         items = order.orderitem_set.all()
         count = items.count()
-        # transaction_id = uuid.uuid1()
         order.order_total_price = 0
         if ShippingAddress.objects.filter(user=request.user,default_address=True).exists():
             delivery_address =ShippingAddress.objects.get(user=request.user,default_address=True)
@@ -131,6 +138,7 @@ def confirm_purchase(request):
         return redirect('home')
     
 def process_order(request):
+
     print("process root")
     if request.method == 'POST':
     # transaction_id = datetime.datetime.now().timestamp()
@@ -145,7 +153,9 @@ def process_order(request):
 
             if total == order.order_total_price:
                 order.order_status = Order.ORDER_PLACED
-                order.pyment_status = Order.PAID
+                order.payment_status = Order.PAID
+                order.payment_mode = 'PAYPAL'
+                order.create_date=datetime.date.today()
                 order.save() 
            
             return JsonResponse(safe=False)
@@ -156,6 +166,12 @@ def process_order(request):
             return JsonResponse(safe=False)
     else:
         return JsonResponse(safe=False)
+
+def place_order(request):
+    if request.method == 'POST':
+        payment_mode = request.POST['payment']
+        print(payment_mode)
+        pass    
 
 def order_history(request):
     if request.user.is_authenticated:
@@ -173,10 +189,10 @@ def order_history(request):
 def admin_order_history(request):
     if request.user.is_authenticated:
         
-        orders = Order.objects.filter()
+        orders = Order.objects.filter(order_status=Order.ORDER_PLACED)
         dict = {}
         for order in orders:
-            dict[order.id]= OrderItem.objects.filter(order=order)
+            dict[order]= OrderItem.objects.filter(order=order)
         context ={'dict':dict}
         return render(request,'admin_order_history.html',context)
     else:
@@ -190,10 +206,11 @@ def admin_order_delete(request,id):
     else:
         return redirect('home')
 
-def vendor_order(request):
+# def vendor_order(request):
     if request.user.is_authenticated:
-        orders_all = Order.objects.filter(order_status=ORDER_PLACED)
+        orders_all = Order.objects.filter(order_status=Order.ORDER_PLACED)
         print(orders_all)
+        item = OrderItem.objects.filter(user=request.user,order=order)
         orders = []
         for order in orders_all:
             if order.product.vendor == request.user:

@@ -1,146 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<title>MP's Ecommerce</title>
-
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+<html>
 <head>
-    <title>MP's Ecommerce</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <style>
-    @import url("https://bootswatch.com/flatly/bootstrap.min.css");
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+<style>
 body {
-  padding-top: 50px;
-}
-footer {
-  padding-left: 15px;
-  padding-right: 15px;
+  font-family: "Lato", sans-serif;
 }
 
-/*
- * Off Canvas
- * --------------------------------------------------
- */
-@media screen and (max-width: 768px) {
-  .row-offcanvas {
-    position: relative;
-    -webkit-transition: all 0.25s ease-out;
-    -moz-transition: all 0.25s ease-out;
-    transition: all 0.25s ease-out;
-    background:#ecf0f1;
-  }
-
-  .row-offcanvas-left
-  .sidebar-offcanvas {
-    left: -40%;
-  }
-
-  .row-offcanvas-left.active {
-    left: 40%;
-  }
-
-  .sidebar-offcanvas {
-    position: absolute;
-    top: 0;
-    width: 40%;
-    margin-left: 12px;
-  }
+.sidenav {
+  height: 100%;
+  min-width: fit-content;
+  width: 160px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  padding-top: 20px;
 }
 
-#sidebar {
-    padding:15px;
-    margin-top:10px;
+.sidenav a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.main {
+  margin-left: 160px; /* Same as the width of the sidenav */
+  font-size: 28px; /* Increased text to enable scrolling */
+  padding: 0px 10px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
 }
 </style>
 </head>
 <body>
-<div class="navbar navbar-fixed-top navbar-default" role="navigation" style="padding: 0%;">
-    <div class="container-fluid" style="width: 100vw;padding-left: 0%;padding-right:0%;">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" style="color: whitesmoke;margin-left: 15px;" href="#">Admin Dashboard</a>
-        </div>
-        <div class="collapse navbar-collapse" style="background-color: #333;">
-            <!-- <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul> -->
-            <ul class="nav navbar-nav navbar-right">
-                <li style="margin-top: .8rem;">
-                {% block vendor %}
-        
-                {% endblock %}
+
+<div class="sidenav" >
+    <a href="{% url 'admin_dashboard' %}" style="color: whitesmoke;">DashBoard</a>
+    
                 {% block user %}
         
                 {% endblock %}
-                {% block produts %}
+                
+    <a href="{% url 'adminusers' %}"style="color: whitesmoke;">Users</a>
+            {% block produts %}
         
-                {% endblock %}
-            </li>
-                <li><a href="{% url 'logout' %}" style="color: whitesmoke;margin-right: 25px;"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
-              </ul>
-        </div>
-        <!-- /.nav-collapse -->
-    </div>
-    <!-- /.container -->
+            {% endblock %}
+    <a href="{% url 'show_products' %}"style="color: whitesmoke;">Products</a>
+    <a href="{% url 'admin_order_history' %}"style="color: whitesmoke;">Orders</a>
+    <a href="{% url 'admin_sale_report' %}" style="color: whitesmoke;">Sale Report</a>
+    <a href="{% url 'admin_monthly_report' %}" style="color: whitesmoke;">Monthly Report</a>
+  <a href="{% url 'logout' %}" style="color: whitesmoke;margin-right: 25px;"><span class="glyphicon glyphicon-log-in"></span> Logout</a>
 </div>
-<!-- /.navbar -->
 
-    
-    <div class="container-fluid" style="display:flex" >
-    <div class="row row-offcanvas row-offcanvas-left" style="flex: 1;">
-        <div class="col-lg-3 col-xs-6  col-sm-3 sidebar-offcanvas" style="max-width: 18%;" id="sidebar" role="navigation">
-            <div class="sidebar-nav" style="width: fit-content;background-color: #333;">
-                <ul class="nav position-fixed" >
-
-                    <li class="active"><a href="{% url 'admin_dashboard' %}" style="color: whitesmoke;">DashBoard</a></li>
-                    <li><a href="{% url 'admin_vendor_page' %}"style="color: whitesmoke;">vendors</a></li>
-                    <li><a href="{% url 'adminusers' %}"style="color: whitesmoke;">Users</a></li>
-                    <li class="nav-divider"></li>
-                    <li><a href="{% url 'show_products' %}"style="color: whitesmoke;">Products</a></li>
-                    <li><a href="{% url 'admin_order_history' %}"style="color: whitesmoke;">Orders</a></li>
-                    <li><a href="#">Link</a></li>
-                    <li class="nav-divider"></li>
-                    <li><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
-                </ul>
-            </div>
-            <!--/.well -->
-        </div>
-        <!--/span-->
-        {% block content %}
+<div class="main">
+    {% block content %}
     
     {% endblock %}
-
-    </div>
-
 </div>
-
-    <!--/row-->
-
-    <hr>
-    <script>
-        $(document).ready(function() {
-      $('[data-toggle=offcanvas]').click(function() {
-        $('.row-offcanvas').toggleClass('active');
-      });
-    });
-    </script>
-    
-    </body>
-
-    <footer>
-        <p></p>
-    </footer>
-
-</div>
+   
+</body>
+</html> 
