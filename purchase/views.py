@@ -167,11 +167,25 @@ def process_order(request):
     else:
         return JsonResponse(safe=False)
 
-def place_order(request):
-    if request.method == 'POST':
-        payment_mode = request.POST['payment']
-        print(payment_mode)
-        pass    
+def accept_order(request,id):
+    if request.user.is_superuser:
+        order = Order.objects.get(id=id)
+        order.delivery_status = Order.ORDER_DISPATCHED
+        order.save()
+        return redirect('admin_order_history')
+    else:
+        return redirect('home')    
+
+def reject_order(request,id):
+    if request.user.is_superuser:
+        order = Order.objects.get(id=id)
+        order.delivery_status = Order.ORDER_CANCELLED
+        order.save()
+        return redirect('admin_order_history')
+    else:
+        return redirect('home')    
+        
+           
 
 def order_history(request):
     if request.user.is_authenticated:

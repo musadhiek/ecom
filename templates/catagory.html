@@ -1,16 +1,21 @@
 {% extends "adminpage.html"%}
 
-{% block vendor %}
+{% block content %}
 
-<table id="myTable" class="table table-striped table-dark" style="margin-left: 5rem;">
+<table id="myTable" class="table table-striped table-dark" style="margin-left: 8rem;font-size: 26px">
+      <h2 style="margin-left: 40%;"> Catagory Management</h2>
+      <hr>
       <thead>
+            
             <tr>
+                  
                   <!-- <th scope="col">Vendor</th> -->
                   
                   <th scope="col">Name</th>
                   
                   <th scope="col">Edit</th>
-                  <th scope="col">Delete</th>
+                  <th scope="col">Delete Products</th>
+                  <th scope="col">Delete Catagory</th>
             </tr>
       </thead>
 
@@ -18,10 +23,12 @@
       <tr>
             
             <td>{{catagory.name}}</td>
-            <td><a href="/edit_catagory/{{ catagory.id}}"><button class="btn btn-success btn-lg btn-block"
+            <td><a href="/edit_catagory/{{ catagory.id}}"><button class="btn btn-success btn-sm btn-block"
                               style="width: auto;">Edit</button></a></td>
-            <td><a href="/delete_catagory/{{catagory.id}}"><button onclick="return confirm(' Are you sure to delete' ) "
-                              class="btn btn-danger btn-lg btn-block" style="width: auto;">Delete</button></a></td>
+            <td><a href="/delete_catagory/{{catagory.id}}"><button onclick="return confirm(' Are you sure to delete the products' ) "
+                  class="btn btn-danger btn-sm btn-block" style="width: auto;">Delete Catagory Products</button></a></td>
+            <td><a href="/delete_catagory_all/{{catagory.id}}"><button onclick="return confirm(' Are you sure to delete the catagory' ) "
+                  class="btn btn-danger btn-sm btn-block" style="width: auto;">Delete Catagory</button></a></td>
       </tr>
 
       {% endfor %}

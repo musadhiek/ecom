@@ -7,6 +7,7 @@ urlpatterns=[
     path('show_catagory',views.show_catagory,name='show_catagory'),
     path('edit_catagory/<int:id>',views.edit_catagory,name='edit_catagory'),
     path('delete_catagory/<int:id>',views.delete_catagory,name='delete_catagory'),
+    path('delete_catagory_all/<int:id>',views.delete_catagory_all,name='delete_catagory_all'),
 
 
     

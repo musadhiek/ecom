@@ -71,7 +71,7 @@
     }
 </style>
 
-<section class="jumbotron text-center" style="max-width:80vmax;margin-left: 8rem;" >
+<section class="jumbotron text-center" style="max-width:80vmax;margin-left: 8rem;font-size: 20px;" >
     <div class="container">
         <h1 class="jumbotron-heading">Orders</h1>
         <div class="container mb-4">
@@ -89,6 +89,8 @@
                                     <th scope="col"style="text-align: right;"><h>Order Status</h></th>
                                     <th scope="col"style="text-align: right;"><h>Payment Status</h></th>
                                     <th scope="col"style="text-align: right;"><h>Delivery Status</h></th>
+                                    <th scope="col"style="text-align: right;"><h>Accept</h></th>
+                                    <th scope="col"style="text-align: right;"><h>Reject</h></th>
                                 </tr>
                                 
                             </thead>    
@@ -100,16 +102,20 @@
                                                 <td scope="col" style="text-align: right;" ><h4>${{order.order_total_price}}</h4></td>
                                                 <td scope="col"style="text-align: right;" ><h>{{order.get_order_status_display}}</h></td>
                                                 <td scope="col"style="text-align: right;" ><h>{{order.get_payment_status_display}}</h></td>
-                                                <td scope="col"style="text-align: right;" ><h>{{order.get_delivery_status_display}}</h></td>           
+                                                <td scope="col"style="text-align: right;" ><h>{{order.get_delivery_status_display}}</h></td> 
+                                                <td><a href="/accept_order/{{order.id}}"><button class="btn btn-success btn-sm btn-block"
+                                                    style="width: auto; margin-top: 1.5rem;">Accept</button></a></td>
+                                        <td><a href="/reject_order/{{order.id}}"><button onclick="return confirm(' Are you sure to reject')"
+                                                    class="btn btn-danger btn-sm btn-block" style="width: auto;margin-top: 1.5rem;">Reject</button></a></td>          
                                             </tr>
                                                     {% for item in orderitem %}
                                                     <tr>
-                                                        <th scope="col">User:{{order.user}}</th>
+                                                        <td scope="col">User:{{order.user}}</td>
                                                         <!-- <th><img src="{{ item.product.ImageURL}}"class="img-responsive" style="height: 7rem;" /> </td> -->
-                                                        <th scope="col">Product : {{item.product.title}}</th>
-                                                        <th scope="col" class="text-center">Quantity : {{item.quantity}}</th>
-                                                        <th scope="col" class="text-right">Unit Price : ${{item.product.price}}</th>
-                                                        <th scope="col" class="text-right">Item Total Price : ${{item.item_total_price}}</th>
+                                                        <td scope="col">Product : {{item.product.title}}</td>
+                                                        <td scope="col" class="text-center">Quantity : {{item.quantity}}</td>
+                                                        <td scope="col" class="text-right">Unit Price : ${{item.product.price}}</td>
+                                                        <td scope="col" class="text-right">Item Total Price : ${{item.item_total_price}}</td>
                                                     </tr>
                                                     {% endfor %}
                                                     

@@ -53,9 +53,22 @@ def edit_catagory(request,id):
 
 def delete_catagory(request,id):
     if request.user.is_authenticated:
-        products = Product.objects.filter(vendor=request.user,catagory=id)
+        products = Product.objects.filter(catagory=id)
         if products:
             products.delete()
+        catagories = Catagory.objects.all()
+        return render(request, "catagory.html",{'catagories':catagories})
+    else:
+        return redirect('home')
+
+def delete_catagory_all(request,id):
+    if request.user.is_authenticated:
+        products = Product.objects.filter(catagory=id)
+        if products:
+            products.delete()
+        catagory = Catagory.objects.get(id=id)
+        if catagory:
+            catagory.delete()    
         catagories = Catagory.objects.all()
         return render(request, "catagory.html",{'catagories':catagories})
     else:
@@ -83,8 +96,9 @@ def add_product(request):
         return redirect(show_products)
     else:
         if request.user.is_superuser:
+            catagories = Catagory.objects.all()
             user = User.objects.filter(is_staff=True,is_superuser=False)
-            return render(request,'admin_add_product.html',{'user':user})
+            return render(request,'admin_add_product.html',{'user':user,'catagories':catagories})
         else:
             return redirect('home')
 

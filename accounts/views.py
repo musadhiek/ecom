@@ -41,24 +41,7 @@ def admin_login(request):
                 return render(request,'admin_login.html',)
     else:
         return render(request,'admin_login.html')
-
-# def vendor_login(request):
-#     if request.user.is_authenticated and request.user.is_staff and not request.user.is_superuser:    
-#         return redirect(vendorpage)
-    
-#     if  request.method == 'POST':
-#         username = request.POST['username']
-#         password = request.POST['password']
-        
-#         user = auth.authenticate(username=username,password=password)
-#         if user is not None and user.is_staff and not user.is_superuser:
-#             auth.login(request,user)
-#             return redirect(vendorpage)
-#         else:
-#             messages.error(request,'Incorrect username or password')        
-#             return render(request,'vendor_login.html')    
-#     else:
-#         return render(request,'vendor_login.html')   
+   
 
 def user_login(request):
     if request.user.is_authenticated and user.is_active and not request.user.is_staff and not request.user.is_superuser:    
@@ -184,30 +167,7 @@ def admin_dashboard(request):
 
     return render(request,"admin_dashboard.html",context)
 
-# def admin_sale_report(request):
-    if request.user.is_authenticated:
-        date= datetime.date.today()
-        orders = Order.objects.filter()
-        print(orders)
-        user = []
-        sale = 0
-        user_count = 0
-        product_count = 0
-        order_count = 0
-        for order in orders:
-            sale += order.order_total_price
-            if order.user not in user:
-                print(order.user)
-                user_count +=1
-                user.append(order.user)
-            for orderitem in OrderItem.objects.filter(order=order):
-                print(orderitem.quantity)
-                product_count += orderitem.quantity
-            order_count +=1
-        
-        context={'user_count':user_count,'product_count':product_count,'order_count':order_count,'date':date,'sale':sale}           
 
-    return render(request,"admin_sale_report.html",context)
     
 def admin_sale_report(request):
     if request.user.is_authenticated and request.method=='POST':
@@ -217,11 +177,11 @@ def admin_sale_report(request):
         
         data = Order.objects.filter(create_date__range=[start_date,end_date]).values('create_date').annotate(user_count=Count('user_id'),total_order=Count('id'), amount=Sum('order_total_price')).order_by('-create_date')
         return render(request,"admin_sale_report.html",{'data':data})
-    end_date = datetime.date.today()
-    start_date = datetime.date.today().replace(day=1,month=11)
-    print(start_date)
-    data = Order.objects.filter(create_date__range=[start_date,end_date]).values('create_date').annotate(user_count=Count('user_id'),total_order=Count('id'), amount=Sum('order_total_price')).order_by('-create_date')
-    return render(request,"admin_sale_report.html",{'data':data})    
+    else:
+        end_date = datetime.date.today()
+        start_date = datetime.date.today().replace(day=1)
+        data = Order.objects.filter(create_date__range=[start_date,end_date]).values('create_date').annotate(user_count=Count('user_id'),total_order=Count('id'), amount=Sum('order_total_price')).order_by('-create_date')
+        return render(request,"admin_sale_report.html",{'data':data})    
         
 def admin_monthly_report(request):
     if request.user.is_authenticated:

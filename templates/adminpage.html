@@ -56,13 +56,18 @@ body {
                 {% endblock %}
                 
     <a href="{% url 'adminusers' %}"style="color: whitesmoke;">Users</a>
+            
+    <a href="{% url 'admin_order_history' %}"style="color: whitesmoke;">Orders</a>
             {% block produts %}
         
             {% endblock %}
     <a href="{% url 'show_products' %}"style="color: whitesmoke;">Products</a>
-    <a href="{% url 'admin_order_history' %}"style="color: whitesmoke;">Orders</a>
+    <hr>
     <a href="{% url 'admin_sale_report' %}" style="color: whitesmoke;">Sale Report</a>
     <a href="{% url 'admin_monthly_report' %}" style="color: whitesmoke;">Monthly Report</a>
+    <a href="{% url 'add_catagory' %}"style="color: whitesmoke;">Add Catagory</a>
+    <a href="{% url 'show_catagory' %}"style="color: whitesmoke;">manage Catagory</a>
+   <hr>
   <a href="{% url 'logout' %}" style="color: whitesmoke;margin-right: 25px;"><span class="glyphicon glyphicon-log-in"></span> Logout</a>
 </div>
 
