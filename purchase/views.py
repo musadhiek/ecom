@@ -101,6 +101,7 @@ def confirm_purchase(request):
         if request.method == 'POST' :
             payment_mode = request.POST['payment']
             if payment_mode == 'COD':
+               
                 order.order_status = Order.ORDER_PLACED
                 order.payment_mode = 'COD'
                 order.create_date=datetime.date.today()
@@ -220,26 +221,7 @@ def admin_order_delete(request,id):
     else:
         return redirect('home')
 
-# def vendor_order(request):
-    if request.user.is_authenticated:
-        orders_all = Order.objects.filter(order_status=Order.ORDER_PLACED)
-        print(orders_all)
-        item = OrderItem.objects.filter(user=request.user,order=order)
-        orders = []
-        for order in orders_all:
-            if order.product.vendor == request.user:
-                orders.append(order)
-        print(orders)
-        dict = {}
-        for order in orders:
-            if not order.transaction_id in dict.keys():
-                dict[order.transaction_id]=[]
-            dict[order.transaction_id].append(order)
-        print(dict)
-        context ={'dict':dict}
-        return render(request,'vendor_order_history.html',context)
-    else:
-        return redirect('home')  
+
 
 def add_shipping_address(request):
     print('yes')

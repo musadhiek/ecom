@@ -49,7 +49,7 @@ def admin_login(request):
 
 
 def user_login(request):
-    if request.user.is_authenticated and user.is_active and not request.user.is_staff and not request.user.is_superuser:
+    if request.user.is_authenticated and request.user.is_active  and not request.user.is_superuser:
         return redirect(userpage)
 
     if request.method == 'POST':
@@ -203,6 +203,21 @@ def admin_sale_report(request):
             user_count=Count('user_id'), total_order=Count('id'), amount=Sum('order_total_price')).order_by('-create_date')
         return render(request, "admin_sale_report.html", {'data': data})
 
+def admin_cancelled_report(request):
+    if request.user.is_authenticated and request.method == 'POST':
+        start_date = request.POST['start_date']
+        end_date = request.POST['end_date']
+
+        data = Order.objects.filter(create_date__range=[start_date, end_date],delivery_status=Order.ORDER_CANCELLED).values('create_date').annotate(
+            user_count=Count('user_id'), total_order=Count('id'), amount=Sum('order_total_price')).order_by('-create_date')
+       
+        return render(request, "admin_cancelled_report.html", {'data': data})
+    else:
+        end_date = datetime.date.today()
+        start_date = datetime.date.today().replace(day=1)
+        data = Order.objects.filter(create_date__range=[start_date, end_date],delivery_status=Order.ORDER_CANCELLED).values('create_date').annotate(
+            user_count=Count('user_id'), total_order=Count('id'), amount=Sum('order_total_price')).order_by('-create_date')
+        return render(request, "admin_cancelled_report.html", {'data': data})
 
 def admin_monthly_report(request):
     if request.user.is_authenticated:
