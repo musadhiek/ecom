@@ -11,11 +11,11 @@ class Catagory(models.Model):
        return(self.name)
 
 class Product(models.Model):
-    title = models.CharField(max_length=120)
+    name = models.CharField(max_length=120)
     catagory = models.ForeignKey(Catagory,on_delete=models.CASCADE,null=True,blank=True)
     description = models.TextField(null=True,blank=True)
-    price = models.DecimalField(decimal_places=2,max_digits=100,default=1.00)
-    quantity = models.IntegerField(default=0)
+    product_premium = models.DecimalField(decimal_places=2,max_digits=100,default=1.00)
+    insure_amount = models.DecimalField(decimal_places=2,max_digits=100,default=1.00)
     timestamp = models.DateTimeField(auto_now_add=True,auto_now=False)
     updated = models.DateTimeField(auto_now_add=False,auto_now=True)
     active = models.BooleanField(default=True)

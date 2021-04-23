@@ -76,10 +76,10 @@ def delete_catagory_all(request,id):
 
 def add_product(request):
     if request.method=='POST':
-        title = request.POST['title']
+        name = request.POST['name']
         description = request.POST['description']
-        price = request.POST['price']
-        quantity = request.POST['quantity']
+        product_premium = request.POST['product_premium']
+        insure_amount = request.POST['insure_amount']
         # image = request.FILES.get('image')
         image_data = request.POST['pro_img']
         format , imgstr = image_data.split(';base64,')
@@ -91,16 +91,17 @@ def add_product(request):
         catagory = Catagory.objects.get(id=catagory_id)
         
         
-        product = Product.objects.create(title=title,catagory=catagory, description=description,price=price,quantity=quantity,image=data)
+        product = Product.objects.create(name=name,catagory=catagory, description=description,product_premium=product_premium,insure_amount=insure_amount,image=data)
         product.save()
         return redirect(show_products)
     else:
-        if request.user.is_superuser:
-            catagories = Catagory.objects.all()
-            user = User.objects.filter(is_staff=True,is_superuser=False)
-            return render(request,'admin_add_product.html',{'user':user,'catagories':catagories})
-        else:
-            return redirect('home')
+        # if request.user.is_superuser:
+            
+        #     user = User.objects.filter(is_staff=True,is_superuser=False)
+        #     return render(request,'admin_add_product.html',{'user':user,'catagories':catagories})
+        # else:
+        catagories = Catagory.objects.all()
+        return render(request,'admin_add_product.html',{'catagories':catagories})
 
 def delete_product(request,id):
     product= Product.objects.get(id=id)
@@ -110,16 +111,16 @@ def delete_product(request,id):
 
 def edit_product(request,id):
     if request.method=='POST':
-        title = request.POST['title']
+        name = request.POST['name']
         description = request.POST['description']
-        price = request.POST['price']
-        quantity = request.POST['quantity']
+        product_premium = request.POST['product_premium']
+        insure_amount = request.POST['insure_amount']
 
         product = Product.objects.get(id=id)
-        product.title=title
+        product.name=name
         product.description=description
-        product.price=price
-        product.quantity=quantity
+        product.product_premium=product_premium
+        product.insure_amount=insure_amount
         if 'image' not in request.POST:
             image = request.FILES.get('image')
         else :
@@ -136,8 +137,16 @@ def edit_product(request,id):
 
 def view_product_details(request,id):
     product = Product.objects.get(id=id)
+
+    product = Product.objects.get(id=id)
     catagories = Catagory.objects.all()
     if request.user.is_authenticated:  
         return render(request,'loggedin_details_view.html',{'product':product,'catagories':catagories})
     else:
+        return render(request,'loggedin_details_view.html',{'product':product,'catagories':catagories})
+
+def view_product_detail(request):
+    if request.session['product_id']:
+        catagories = Catagory.objects.all()
+        product = Product.objects.get(id=request.session['product_id'])
         return render(request,'loggedin_details_view.html',{'product':product,'catagories':catagories})

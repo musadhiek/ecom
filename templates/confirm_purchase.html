@@ -82,8 +82,6 @@
                 <input type="radio" id="paypal" name="payment" value="PAYPAL" onchange="show_paypal()">
                 <label for="paypal">PAYPAL</label>
                 <br>
-                <input type="radio" id="razorpay" name="payment" value="RAZORPAY">
-                <label for="razorpay">RAZORPAY</label>
 
               </div>
               <!-- <span id="invalid" style="color: red;">suns</span> -->
@@ -104,7 +102,7 @@
 
               <!-- Include the PayPal JavaScript SDK -->
               <script
-                src="https://www.paypal.com/sdk/js?client-id=AdttXaZLfgdm8IoqHTj6x-W5upG07TN-fDKsnoDder-Hxif4nrpIY95ymI5kiNaIa_j9iiHjKoUN3Ai-&currency=USD"
+                src="https://www.paypal.com/sdk/js?client-id=AWJy00FnzVrwjXpdCvU7-akw5gMfkIrsh8tKd9G0WmiO2QFhw055pP7TeSgkZ1e80I6P0jYlHZaKg_Y9&currency=USD"
                 data-namespace="paypal_sdk"></script>
 
               <script>
@@ -183,10 +181,10 @@
               {% for item in items %}
               <li class="list-group-item d-flex justify-content-between lh-condensed">
                 <div>
-                  <h6 class="my-0">{{item.product.title}}</h6>
+                  <h6 class="my-0">{{item.product.name}}</h6>
                   <small class="text-muted">{{item.product.description}}</small>
                 </div>
-                <span class="text-muted">{{item.price}}</span>
+                <span class="text-muted">{{item.product.product_premium}}</span>
               </li>
               {% endfor %}
 
@@ -197,17 +195,7 @@
             </ul>
             <!-- Cart -->
 
-            <!-- Promo code -->
-            <form class="card p-2">
-              <div class="input-group">
-                <input type="text" class="form-control" placeholder="Promo code" aria-label="Recipient's username"
-                  aria-describedby="basic-addon2">
-                <div class="input-group-append">
-                  <button class="btn btn-secondary btn-md waves-effect m-0" type="button">Redeem</button>
-                </div>
-              </div>
-            </form>
-            <!-- Promo code -->
+            
 
           </div>
           <!--Grid column-->
@@ -233,12 +221,15 @@
             'total': total,
 
           }
-          var url = 'http://127.0.0.1:8000/process_order'
+          
+          
+          var url = 'process_order'
           fetch(url, {
             method: 'POST',
             headers: {
               'X-CSRFToken': '{{csrf_token}}',
               'Content-Type': 'application/json',
+              
             },
             body: JSON.stringify({ 'form': userFormData })
           })
@@ -259,68 +250,8 @@
 
       <hr class="my-4">
 
-      <!-- Social icons -->
-
-      <!-- <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-      <script>
-        function razorpay() {
-          var total = '{{razorpay_total}}'
-          var payment_status = 'razorpay'
-          var options = {
-            "key": "rzp_test_ve87arbZq36Sfo", // Enter the Key ID generated from the Dashboard
-            "amount": total, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-            "currency": "INR",
-            "name": "Esports",
-            "description": "Test Transaction",
-            "image": "https://example.com/your_logo",
-            "order_id": "{{payment.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-            "handler": function (response) {
-              alert('Transaction completed..!!!');
-              // successrazorpay(tid)
-            },
-            "prefill": {
-              "name": "{{address.name}}",
-              "email": "{{address.email}}",
-              "contact": "9999999999"
-            },
-            "notes": {
-              "address": "Razorpay Corporate Office"
-            },
-            "theme": {
-              "color": "#F37254"
-            }
-          };
-          var rzp1 = new Razorpay(options);
-
-          rzp1.open();
-
-        }
-
-
-        function successrazorpay(tid) {
-
-          console.log(tid)
-          var userData = {
-            csrfmiddlewaretoken: '{{ csrf_token }}',
-            tid: tid
-
-          }
-          $.ajax({
-            url: '/razorpay_payment/',
-            type: "POST",
-            data: userData,
-            dataType: "json",
-            success: function (data) {
-              if (data == 'success') {
-
-                window.location.replace("/show_cart")
-              }
-
-            }
-          });
-        }
-
-      </script> -->
+     
+      
       <script>
         function show_cod(){
           $('#paypal-button-container').hide()
@@ -343,8 +274,9 @@
             console.log(userData.payment)
               
           $.ajax({
-            url: 'http://127.0.0.1:8000/confirm_purchase',
+            url: 'confirm_purchase',
             type: "POST",
+            csrfmiddlewaretoken: '{{ csrf_token }}',
             data: userData,
             dataType: "json",
             success: function (data) {

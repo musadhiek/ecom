@@ -59,7 +59,11 @@ def user_login(request):
         user = auth.authenticate(username=username, password=password)
         if user is not None and not user.is_staff and user.is_active and not user.is_superuser:
             auth.login(request, user)
-            return redirect(userpage)
+            if 'product_id' in request.session:
+                id = request.session['product_id']
+                return redirect("view_product_detail")
+            else:
+                return redirect(userpage)
         else:
             messages.error(request, 'Incorrect username or password')
             return render(request, 'user_login.html')
@@ -77,8 +81,6 @@ def enter_otp(request):
         otp_id = request.session['otp_id']
         customer_id = request.session['customer_id']
         user = User.objects.get(id = customer_id)
-
-        print(otp_id)
         url = "https://d7networks.com/api/verifier/verify"
 
         payload = {'otp_id': otp_id,
@@ -93,18 +95,14 @@ def enter_otp(request):
         response = requests.request(
             "POST", url, headers=headers, data=payload, files=files)
 
-        print(response.text.encode('utf8'))
         data = response.text.encode('utf8')
         dict = json.loads(data.decode('utf8'))
         status = dict['status']
-        print(status)
         if status == 'success':
-            print('youre login is success')
 
             auth.login(request,user)
             return redirect(home)
         else:
-            print("your login failed")
             return redirect(home)
     else:
         return render(request, 'enter_otp.html')
@@ -114,7 +112,6 @@ def send_otp(request):
     if request.method == 'POST':
         mobile = request.POST['mobile']
 
-        print(mobile)
         if UserProfile.objects.filter(mobile=mobile).exists():
             user_profile = UserProfile.objects.get(mobile=mobile)
             customer = User.objects.get(id=user_profile.user.id)
@@ -132,7 +129,6 @@ def send_otp(request):
                 }
                 response = requests.request(
                     "POST", url, headers=headers, data=payload, files=files)
-                print(response.text.encode('utf8'))
                 data = response.text.encode('utf8')
                 dict = json.loads(data.decode('utf8'))
                 otp_id = dict['otp_id']
@@ -148,7 +144,6 @@ def send_otp(request):
 def home(request):
     products = Product.objects.all()
     catagories = Catagory.objects.all()
-    print(catagories)
     if request.user.is_authenticated:
         order, created = Order.objects.get_or_create(user=request.user, order_status=Order.ORDER_NOT_PLACED)
         count = order.orderitem_set.all().count()
@@ -165,7 +160,6 @@ def admin_dashboard(request):
     if request.user.is_authenticated:
         date = datetime.date.today()
         orders = Order.objects.filter(create_date=date)
-        print(orders)
         user = []
         sale = 0
         user_count = 0
@@ -174,11 +168,9 @@ def admin_dashboard(request):
         for order in orders:
             sale += order.order_total_price
             if order.user not in user:
-                print(order.user)
                 user_count += 1
                 user.append(order.user)
             for orderitem in OrderItem.objects.filter(order=order):
-                print(orderitem.quantity)
                 product_count += orderitem.quantity
             order_count += 1
 
@@ -232,7 +224,6 @@ def admin_monthly_report(request):
         else:
             start_date = datetime.date.today().replace(day=1)
             end_date = datetime.date.today()
-            print(start_date)
             data = Order.objects.filter(create_date__range=[start_date, end_date]).values('create_date').annotate(
                 user_count=Count('user_id'), total_order=Count('id'), amount=Sum('order_total_price')).order_by('-create_date')
             return render(request, "admin_monthly_report.html", {'data': data})
@@ -268,16 +259,16 @@ def userpage(request):
     else:
         return redirect(home)
 
-
+#Genarating user profile
 def user_profile(request):
     if request.user.is_authenticated:
         shipping_address = ShippingAddress.objects.filter(
             user=request.user, default_address=False)
-        if ShippingAddress.objects.filter(user=request.user, default_address=True).exists():
-            primary_address = ShippingAddress.objects.get(
-                user=request.user, default_address=True)
+        # if ShippingAddress.objects.filter(user=request.user, default_address=True).exists():
+        primary_address = ShippingAddress.objects.filter(
+                user=request.user, default_address=True).exists()
+                    
         if UserProfile.objects.filter(user=request.user).exists():
-            print("its working")
             profile = UserProfile.objects.get(user=request.user)
             context = {'shipping_address': shipping_address,
                        'primary_address': primary_address, 'profile': profile}
@@ -315,7 +306,7 @@ def edit_user_profile(request):
 def delete_user(request, id):
     user = User.objects.get(id=id)
     user.delete()
-    return redirect(admin_vendor_page)
+    return redirect(admin_user_page)
 
 
 def user_signup(request):
@@ -326,7 +317,8 @@ def user_signup(request):
         confirm_password = request.POST['password2']
         if password == confirm_password:
             if User.objects.filter(email=email).exists():
-                return render(request, 'user_signup.html', {'warning': 'a user with this email already exists'})
+                messages.error(request,'a user with this email already exists')
+                return render(request, 'user_signup.html')
             else:
                 user = User.objects.create_user(
                     username=username, email=email, password=password, is_staff=False, is_superuser=False)

@@ -5,24 +5,24 @@
 <fieldset>
 	<p class="text-uppercase pull-center"> Add New Product</p>
 	 <div class="form-group">
-		<select name="catagory_id">
+		<select name="catagory_id" style="width: 120px">
 			{% for catagory in catagories %}
 			<option value="{{catagory.id}}"  >{{catagory.name}}</option>
 			{% endfor %}
 		</select>
 	 </div>
 	<div class="form-group">
-		<input type="text" name="title" id="title" class="form-control input-lg" required="required" placeholder="title">
+		<input type="text" name="name" class="form-control input-lg" required="required" placeholder="name">
 	</div>
 
 	<div class="form-group">
 		<input type="text" name="description" id="description" class="form-control input-lg" required="required" placeholder="description">
 	</div>
 	<div class="form-group">
-		<input type="number" name="price" id="price" class="form-control input-lg" required="required" placeholder="price">
+		<input type="number" name="product_premium"  class="form-control input-lg" required="required" placeholder="product_premium">
 	</div>
 	<div class="form-group">
-		<input type="number" name="quantity" id="quantity" class="form-control input-lg" required="required" placeholder="quantity">
+		<input type="number" name="insure_amount" class="form-control input-lg" required="required" placeholder="insure_amount">
 	</div>
 	<div class="form-group">
 		<input type="file" name="image" id="image" class="form-control input-lg" required="required" placeholder="">
@@ -31,7 +31,7 @@
 	<div>
 	<img style="height: 100px; width: 100px;" id="crop_image">
 	</div>	
-		<input type="submit" class="btn btn-lg btn-primary   value=" Add">
+		<input type="submit" class="btn btn-lg btn-primary"   value=" Add">
 	</div>
 </fieldset>
 

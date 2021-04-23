@@ -1,4 +1,5 @@
 {% extends "adminpage.html"%}
+{% load static %}
 {% block produts %}
                 <button class="btn btn-outline-success my-2 my-sm-0 " type="submit">
                     <a href="{% url 'add_product' %}" style="padding:0%;color:black;align-content: center;">Add New
@@ -14,12 +15,12 @@
             <thead>
                   <tr>
                   <!-- <th scope="col">Vendor</th> -->
-                        
-                        <th scope="col">Title</th>
+                        <th scope="col">Catagory</th>
+                        <th scope="col">Name</th>
                         <th scope="col">Image</th>
                         <th scope="col">Description</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Quantity</th>
+                        <th scope="col">Premium</th>
+                        <th scope="col">Insure Amount</th>
                         <th scope="col">Edit</th>
                         <th scope="col">Delete</th>
                   </tr>
@@ -27,11 +28,12 @@
 
             {% for product in products %}
             <tr>
-                  <td>{{product.title}}</td>
+                  <td>{{product.catagory}}</td>
+                  <td>{{product.name}}</td>
                   <td ><img style="height: 100px; width: 100px;" src="{{product.ImageURL}}"> </td>
                   <td>{{product.description}}</td>
-                  <td>{{product.price}}</td>
-                  <td>{{product.quantity}}</td>
+                  <td>{{product.product_premium}}</td>
+                  <td>{{product.insure_amount}}</td>
                   <td><a href="/edit_product/{{ product.id}}"><button class="btn btn-success btn-sm btn-block"
                               style="width: auto;">Edit</button></a></td>
                   <td><a href="/delete_product/{{product.id}}"><button onclick="return confirm(' Are you sure to delete' ) "

@@ -1,14 +1,16 @@
 {% block products %}
 {% for product in products %}
+{% load static %}
     <div class="card" >
     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12" style="padding: 2%;">
       <div class="card">
       <div style="max-width: 20rem;">
         <img src="{{product.ImageURL}}" class="img-responsive" style="height: 10rem;">
         <div class="card-body" style="max-height: 100%;width: max-content;">
-          <h5 class="card-title">{{product.title}}</h5>
+          <h5 class="card-title">{{product.name}}</h5>
           <!-- <p class="card-text">{{product.description}}</p> -->
-          <h3 class="card-price"><p>Price:</p>{{product.price}}</h3>
+          <h3 class="card-price"><p>Premium:</p>{{product.product_premium}}</h3>
+          <h3 class="card-price"><p>Insure Amount:</p>{{product.insure_amount}}</h3>
           <form method="POST">
             {%csrf_token%}
           <a href="{% url 'view_product_details' product.id %}" type="submit" class="btn btn-outline-success btn-sm">View</a>

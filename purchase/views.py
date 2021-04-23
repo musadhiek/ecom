@@ -6,7 +6,8 @@ from .models import OrderItem,Order,ShippingAddress
 import datetime
 import json
 from django.http import JsonResponse
-import razorpay
+#error with csrf cooki in payment
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
@@ -20,7 +21,7 @@ def show_cart(request):
         
         total = 0
         for item in items:
-            total += item.quantity * item.product.price
+            total += item.quantity * item.product.product_premium
             item.item_total_price = item.get_item_total
         if count ==0:
             message = "There is no items in Your cart!" 
@@ -38,21 +39,20 @@ def add_to_cart(request,id):
             order, created = Order.objects.get_or_create(user=user,order_status=Order.ORDER_NOT_PLACED)
             if OrderItem.objects.filter(user=user,order=order,product=product).exists():
                 item =OrderItem.objects.get(user=user,order=order,product=product) 
-                if item.quantity <= item.product.quantity:
-                    item.quantity = item.quantity+1
-                    item.item_total_price = item.quantity * item.product.price
-                    item.save()
-                    return redirect('home')
-                else:
-                    return redirect('home')
+                item.quantity = item.quantity+1
+                item.item_total_price = item.quantity * item.product.product_premium    
+                item.save()
+                return redirect('home')
+                
             else:
 
                 item = OrderItem.objects.create( user=user,order=order,product=product)
-                item.item_total_price = item.quantity * item.product.price
+                item.item_total_price = item.quantity * item.product.product_premium
                 item.save()
                 return redirect('home')
         else:
-            return redirect('home')
+            request.session['product_id']=id
+            return redirect('user_login')
 
 def delete_cart_item(request,id):
     if request.user.is_authenticated:
@@ -70,7 +70,7 @@ def add_one_quantity(request,id):
         order = Order.objects.get(user=request.user,order_status=Order.ORDER_NOT_PLACED)
         item = OrderItem.objects.get(product=product,user=request.user,order=order)
         item.quantity +=1
-        item.item_total_price = item.product.price * item.quantity
+        item.item_total_price = item.product.product_premium * item.quantity
         item.save()
         return redirect(show_cart)
     else:
@@ -83,7 +83,7 @@ def remove_one_quantity(request,id):
         item = OrderItem.objects.get(product=product,user=request.user,order=order)
         if item.quantity>1:
             item.quantity -=1
-            item.item_total_price = item.product.price * item.quantity
+            item.item_total_price = item.product.product_premium * item.quantity
             item.save()
             return redirect(show_cart)
         else :
@@ -93,7 +93,6 @@ def remove_one_quantity(request,id):
     else:
         return redirect('home')    
     
-
 
 def confirm_purchase(request):
     if request.user.is_authenticated:
@@ -111,21 +110,16 @@ def confirm_purchase(request):
         
            
         items = order.orderitem_set.all()
-        count = items.count()
         order.order_total_price = 0
+        count = items.count()
         if ShippingAddress.objects.filter(user=request.user,default_address=True).exists():
             delivery_address =ShippingAddress.objects.get(user=request.user,default_address=True)
             if count >1:
                 for item in items:
                     order.order_total_price += item.item_total_price
-                    item.product.quantity = item.product.quantity - item.quantity
-                    
-                    item.product.save()
             else:
                 item = OrderItem.objects.get(order=order)
                 order.order_total_price = item.item_total_price
-                item.product.quantity = item.product.quantity - item.quantity 
-                item.product.save()
             
             # order.create_date = datetime.today()
             
@@ -152,12 +146,12 @@ def process_order(request):
             total = float(data['form']['total'])
             # order.transaction_id = transaction_id
 
-            if total == order.order_total_price:
-                order.order_status = Order.ORDER_PLACED
-                order.payment_status = Order.PAID
-                order.payment_mode = 'PAYPAL'
-                order.create_date=datetime.date.today()
-                order.save() 
+            # if total == order.order_total_price:
+            order.order_status = Order.ORDER_PLACED
+            order.payment_status = Order.PAID
+            order.payment_mode = 'PAYPAL'
+            order.create_date=datetime.date.today()
+            order.save() 
            
             return JsonResponse(safe=False)
     
